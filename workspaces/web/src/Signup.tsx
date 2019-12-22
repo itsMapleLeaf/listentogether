@@ -1,5 +1,5 @@
 import React from "react"
-import { Link } from "react-router-dom"
+import { Link } from "./router"
 
 type Props = {}
 
@@ -22,7 +22,7 @@ function Signup(props: Props) {
         </label>
         <button type="submit">submit</button>
       </form>
-      <Link to="/">return to home</Link>
+      <Link to={{ name: "home" }}>return to home</Link>
     </>
   )
 }
