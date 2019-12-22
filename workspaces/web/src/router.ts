@@ -1,5 +1,7 @@
 import createRouter from "./routing/createRouter"
 
-type Route = { name: "home" } | { name: "login" } | { name: "signup" }
+export type AppRoute = { name: "home" } | { name: "login" } | { name: "signup" }
 
-export let { Router, Route, Link } = createRouter<Route>()
+export let { Router, RouterContext, useRouter, Route, Link } = createRouter<
+  AppRoute
+>()
