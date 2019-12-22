@@ -1537,7 +1537,7 @@
   dependencies:
     graphql "*"
 
-"@types/history@^4.7.3":
+"@types/history@^4.7.2":
   version "4.7.3"
   resolved "https://registry.yarnpkg.com/@types/history/-/history-4.7.3.tgz#856c99cdc1551d22c22b18b5402719affec9839a"
   integrity sha512-cS5owqtwzLN5kY+l+KgKdRJ/Cee8tlmQoGQuIE9tWnSmS3JMKzmxo2HIAk2wODMifGwO20d62xZQLYz+RLfXmw==
@@ -5566,7 +5566,7 @@ hex-color-regex@^1.1.0:
   resolved "https://registry.yarnpkg.com/hex-color-regex/-/hex-color-regex-1.1.0.tgz#4c06fccb4602fe2602b3c93df82d7e7dbf1a8a8e"
   integrity sha512-l9sfDFsuqtOqKDsQdqrMRk0U85RZc0RtOR9yPI7mRVOa4FsR/BVnZ0shmQRM96Ji99kYZP/7hn1cedc1+ApsTQ==
 
-history@^4.10.1:
+history@^4.9.0:
   version "4.10.1"
   resolved "https://registry.yarnpkg.com/history/-/history-4.10.1.tgz#33371a65e3a83b267434e2b3f3b1b4c58aad4cf3"
   integrity sha512-36nwAD620w12kuzPAsyINPWJqlNbij+hpK1k9XRloDtym8mxzGYl2c17LnV6IAGB2Dmg4tEa7G7DlawS0+qjew==
@@ -11254,6 +11254,15 @@ type-is@~1.6.17, type-is@~1.6.18:
   dependencies:
     media-typer "0.3.0"
     mime-types "~2.1.24"
+
+type-route@^0.3.4:
+  version "0.3.4"
+  resolved "https://registry.yarnpkg.com/type-route/-/type-route-0.3.4.tgz#e9024232f10dfbf76744e8eb249ab79b273e6e2e"
+  integrity sha512-v8sKfnkhj/v6HpdQknzhgWePjOS3U7KpNeXHSCXQCTITvBNo6kgfix/s+fYlIyM4qs1pyERv35djHWprLv/V4Q==
+  dependencies:
+    "@types/history" "^4.7.2"
+    history "^4.9.0"
+    querystringify "^2.1.1"
 
 type@^1.0.1:
   version "1.2.0"
