@@ -11,7 +11,7 @@ export function getUserId(context: Context) {
   const Authorization = context.request.get('Authorization')
   if (Authorization) {
     const token = Authorization.replace('Bearer ', '')
-    const verifiedToken = verify(token, APP_SECRET) as Token
+    const verifiedToken = verify(token, APP_SECRET) as Token | undefined
     return verifiedToken?.userId
   }
 }
