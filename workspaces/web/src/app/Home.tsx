@@ -1,7 +1,8 @@
 import React from "react"
-import { routes } from "../navigation/router"
+import { useRoutes } from "../navigation/routerContext"
 
 function Home() {
+  let routes = useRoutes()
   return (
     <>
       <a {...routes.login.link()}>log in</a> |{" "}

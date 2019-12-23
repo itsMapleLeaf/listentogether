@@ -1,6 +1,6 @@
 import React from "react"
 import { RouteDefinition } from "type-route"
-import { useRouter } from "./routerContext"
+import { useCurrentRoute } from "./routerContext"
 
 type RouteProps<N, P> = {
   route: RouteDefinition<N, P>
@@ -13,7 +13,7 @@ type RouteProps<N, P> = {
  * @template P The route params, which are passed as props to the component
  */
 export default function Route<N extends string, P>(props: RouteProps<N, P>) {
-  const route = useRouter()
+  const route = useCurrentRoute()
   return (
     <>
       {route.name === props.route.name

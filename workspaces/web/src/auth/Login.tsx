@@ -1,9 +1,10 @@
 import React from "react"
-import { routes } from "../navigation/router"
+import { useRoutes } from "../navigation/routerContext"
 
 type Props = {}
 
 function Login(props: Props) {
+  let routes = useRoutes()
   return (
     <>
       <h1>log in</h1>
