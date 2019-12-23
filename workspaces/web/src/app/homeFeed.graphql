@@ -1,0 +1,10 @@
+query homeFeed {
+  feed {
+    id
+    title
+    content
+    author {
+      name
+    }
+  }
+}
