@@ -1,10 +1,12 @@
 import React from "react"
 import ReactDOM from "react-dom"
-import Home from "./Home"
-import "./index.css"
-import Login from "./Login"
-import { Route, RouterProvider, routes } from "./router"
-import Signup from "./Signup"
+import Home from "./app/Home"
+import Login from "./auth/Login"
+import Signup from "./auth/Signup"
+import Route from "./navigation/Route"
+import { routes } from "./navigation/router"
+import { RouterProvider } from "./navigation/routerContext"
+import "./ui/index.css"
 
 ReactDOM.render(
   <RouterProvider>

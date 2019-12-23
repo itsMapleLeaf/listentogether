@@ -1,5 +1,5 @@
 import React from "react"
-import { routes } from "./router"
+import { routes } from "../navigation/router"
 
 type Props = {}
 
