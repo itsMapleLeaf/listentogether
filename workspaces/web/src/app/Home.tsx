@@ -3,14 +3,24 @@ import { useHomeFeedQuery } from "../generated/graphql"
 import Link from "../navigation/Link"
 import { appRoutes } from "../navigation/NavigationStore"
 
-function Home() {
+type Props = {
+  isAuthenticated: boolean
+}
+
+function Home(props: Props) {
   const { loading, error, data } = useHomeFeedQuery()
   return (
     <>
-      <nav>
-        <Link to={appRoutes.login}>log in</Link> |{" "}
-        <Link to={appRoutes.signup}>sign up</Link>
-      </nav>
+      {props.isAuthenticated ? (
+        <nav>
+          <button>log out</button>
+        </nav>
+      ) : (
+        <nav>
+          <Link to={appRoutes.login}>log in</Link> |{" "}
+          <Link to={appRoutes.signup}>sign up</Link>
+        </nav>
+      )}
       <main>
         {loading && <p>loading...</p>}
         {error && <p>an error occurred</p>}
