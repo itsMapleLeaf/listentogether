@@ -3,18 +3,27 @@ import ApolloClient from "apollo-boost"
 import React from "react"
 import ReactDOM from "react-dom"
 import AppRoutes from "./app/AppRoutes"
-import { createAppRouter } from "./navigation/router"
-import { RouterProvider } from "./navigation/routerContext"
+import { storedToken } from "./auth/storedToken"
+import { NavigationProvider } from "./navigation/navigationContext"
 import "./ui/index.css"
 
-const router = createAppRouter()
-const client = new ApolloClient({ uri: "http://localhost:4000" })
+const client = new ApolloClient({
+  uri: "http://localhost:4000",
+  request: async (operation) => {
+    const token = await storedToken.get()
+    operation.setContext({
+      headers: {
+        authorization: token ? `Bearer ${token}` : "",
+      },
+    })
+  },
+})
 
 ReactDOM.render(
   <ApolloProvider client={client}>
-    <RouterProvider router={router}>
+    <NavigationProvider>
       <AppRoutes />
-    </RouterProvider>
+    </NavigationProvider>
   </ApolloProvider>,
   document.getElementById("root"),
 )

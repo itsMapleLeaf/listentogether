@@ -1,13 +1,15 @@
 import { Form, Formik } from "formik"
+import { observer } from "mobx-react-lite"
 import React from "react"
 import { object, string } from "yup"
 import extractErrorMessage from "../common/extractErrorMessage"
-import { useLoginMutation } from "../generated/graphql"
-import { useRoutes } from "../navigation/routerContext"
+import Link from "../navigation/Link"
+import { appRoutes } from "../navigation/NavigationStore"
 import FormTextInput from "../ui/FormTextInput"
+import { AuthStore } from "./AuthStore"
 
 type Props = {
-  onLoginSuccess: (token: string) => void
+  auth: AuthStore
 }
 
 type FormValues = {
@@ -27,18 +29,9 @@ const validationSchema = object<FormValues>({
   password: string().required(),
 })
 
-function Login(props: Props) {
-  const [login, { loading, error }] = useLoginMutation()
-  const routes = useRoutes()
-
-  const handleSubmit = async (variables: FormValues) => {
-    try {
-      const result = await login({ variables })
-      const token = result.data?.login.token
-      if (token) props.onLoginSuccess(token)
-    } catch (error) {
-      console.error(error)
-    }
+function Login({ auth }: Props) {
+  const handleSubmit = (variables: FormValues) => {
+    auth.login(variables)
   }
 
   return (
@@ -50,17 +43,19 @@ function Login(props: Props) {
         onSubmit={handleSubmit}
       >
         <Form>
-          <fieldset disabled={loading}>
+          <fieldset disabled={auth.loginState.type === "loading"}>
             <FormTextInput name="email" type="email" label="email" />
             <FormTextInput name="password" type="password" label="password" />
             <button type="submit">submit</button>
           </fieldset>
         </Form>
       </Formik>
-      {error && <p>{extractErrorMessage(error)}</p>}
-      <a {...routes.home.link()}>return to home</a>
+      {auth.loginState.type === "error" && (
+        <p>{extractErrorMessage(auth.loginState.error)}</p>
+      )}
+      <Link to={appRoutes.home}>return to home</Link>
     </>
   )
 }
 
-export default Login
+export default observer(Login)

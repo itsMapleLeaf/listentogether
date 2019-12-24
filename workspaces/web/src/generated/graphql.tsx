@@ -19,18 +19,22 @@ export type AuthPayload = {
 
 export type Mutation = {
    __typename?: 'Mutation',
-  signup: AuthPayload,
-  login: AuthPayload,
   createDraft: Post,
   deletePost?: Maybe<Post>,
+  login: AuthPayload,
   publish?: Maybe<Post>,
+  signup: AuthPayload,
 };
 
 
-export type MutationSignupArgs = {
-  name?: Maybe<Scalars['String']>,
-  email: Scalars['String'],
-  password: Scalars['String']
+export type MutationCreateDraftArgs = {
+  content?: Maybe<Scalars['String']>,
+  title: Scalars['String']
+};
+
+
+export type MutationDeletePostArgs = {
+  id?: Maybe<Scalars['ID']>
 };
 
 
@@ -40,35 +44,31 @@ export type MutationLoginArgs = {
 };
 
 
-export type MutationCreateDraftArgs = {
-  title: Scalars['String'],
-  content?: Maybe<Scalars['String']>
-};
-
-
-export type MutationDeletePostArgs = {
-  id?: Maybe<Scalars['ID']>
-};
-
-
 export type MutationPublishArgs = {
   id?: Maybe<Scalars['ID']>
 };
 
+
+export type MutationSignupArgs = {
+  email: Scalars['String'],
+  name?: Maybe<Scalars['String']>,
+  password: Scalars['String']
+};
+
 export type Post = {
    __typename?: 'Post',
+  author?: Maybe<User>,
+  content?: Maybe<Scalars['String']>,
   id: Scalars['ID'],
   published: Scalars['Boolean'],
   title: Scalars['String'],
-  content?: Maybe<Scalars['String']>,
-  author?: Maybe<User>,
 };
 
 export type Query = {
    __typename?: 'Query',
-  me?: Maybe<User>,
   feed: Array<Post>,
   filterPosts: Array<Post>,
+  me?: Maybe<User>,
   post?: Maybe<Post>,
 };
 
@@ -84,9 +84,9 @@ export type QueryPostArgs = {
 
 export type User = {
    __typename?: 'User',
+  email: Scalars['String'],
   id: Scalars['ID'],
   name?: Maybe<Scalars['String']>,
-  email: Scalars['String'],
   posts: Array<Post>,
 };
 
@@ -105,6 +105,17 @@ export type HomeFeedQuery = (
   )> }
 );
 
+export type BasicUserInfoQueryVariables = {};
+
+
+export type BasicUserInfoQuery = (
+  { __typename?: 'Query' }
+  & { me: Maybe<(
+    { __typename?: 'User' }
+    & Pick<User, 'name'>
+  )> }
+);
+
 export type LoginMutationVariables = {
   email: Scalars['String'],
   password: Scalars['String']
@@ -116,6 +127,10 @@ export type LoginMutation = (
   & { login: (
     { __typename?: 'AuthPayload' }
     & Pick<AuthPayload, 'token'>
+    & { user: (
+      { __typename?: 'User' }
+      & Pick<User, 'name'>
+    ) }
   ) }
 );
 
@@ -157,10 +172,45 @@ export function useHomeFeedLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHoo
 export type HomeFeedQueryHookResult = ReturnType<typeof useHomeFeedQuery>;
 export type HomeFeedLazyQueryHookResult = ReturnType<typeof useHomeFeedLazyQuery>;
 export type HomeFeedQueryResult = ApolloReactCommon.QueryResult<HomeFeedQuery, HomeFeedQueryVariables>;
+export const BasicUserInfoDocument = gql`
+    query basicUserInfo {
+  me {
+    name
+  }
+}
+    `;
+
+/**
+ * __useBasicUserInfoQuery__
+ *
+ * To run a query within a React component, call `useBasicUserInfoQuery` and pass it any options that fit your needs.
+ * When your component renders, `useBasicUserInfoQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useBasicUserInfoQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useBasicUserInfoQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<BasicUserInfoQuery, BasicUserInfoQueryVariables>) {
+        return ApolloReactHooks.useQuery<BasicUserInfoQuery, BasicUserInfoQueryVariables>(BasicUserInfoDocument, baseOptions);
+      }
+export function useBasicUserInfoLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<BasicUserInfoQuery, BasicUserInfoQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<BasicUserInfoQuery, BasicUserInfoQueryVariables>(BasicUserInfoDocument, baseOptions);
+        }
+export type BasicUserInfoQueryHookResult = ReturnType<typeof useBasicUserInfoQuery>;
+export type BasicUserInfoLazyQueryHookResult = ReturnType<typeof useBasicUserInfoLazyQuery>;
+export type BasicUserInfoQueryResult = ApolloReactCommon.QueryResult<BasicUserInfoQuery, BasicUserInfoQueryVariables>;
 export const LoginDocument = gql`
     mutation login($email: String!, $password: String!) {
   login(email: $email, password: $password) {
     token
+    user {
+      name
+    }
   }
 }
     `;

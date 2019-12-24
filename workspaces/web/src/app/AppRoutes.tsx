@@ -1,26 +1,28 @@
-import React from "react"
+import { useApolloClient } from "@apollo/react-hooks"
+import { useLocalStore } from "mobx-react-lite"
+import React, { useEffect } from "react"
+import { AuthStore } from "../auth/AuthStore"
 import Login from "../auth/Login"
 import Signup from "../auth/Signup"
+import { useNavigationContext } from "../navigation/navigationContext"
+import { appRoutes } from "../navigation/NavigationStore"
 import Route from "../navigation/Route"
-import { useRouter } from "../navigation/routerContext"
 import Home from "./Home"
 
 export default function AppRoutes() {
-  const { router } = useRouter()
-  const { routes } = router
+  const navigation = useNavigationContext()
+  const client = useApolloClient()
+  const auth = useLocalStore(() => new AuthStore(navigation, client))
 
-  const handleLogin = (token: string) => {
-    // etc.
-  }
+  useEffect(() => {
+    auth.getAuthState()
+  }, [auth])
 
   return (
     <>
-      <Route route={routes.home} render={() => <Home />} />
-      <Route
-        route={routes.login}
-        render={() => <Login onLoginSuccess={handleLogin} />}
-      />
-      <Route route={routes.signup} render={() => <Signup />} />
+      <Route route={appRoutes.home} children={<Home />} />
+      <Route route={appRoutes.login} children={<Login auth={auth} />} />
+      <Route route={appRoutes.signup} children={<Signup />} />
     </>
   )
 }

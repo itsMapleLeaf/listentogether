@@ -1,7 +1,8 @@
 import { Form, Formik } from "formik"
 import React from "react"
 import { object, string } from "yup"
-import { useRoutes } from "../navigation/routerContext"
+import Link from "../navigation/Link"
+import { appRoutes } from "../navigation/NavigationStore"
 import FormTextInput from "../ui/FormTextInput"
 
 type FormValues = {
@@ -29,9 +30,7 @@ let validationSchema = object<FormValues>({
 })
 
 function Signup() {
-  let routes = useRoutes()
-
-  let handleSubmit = (values: FormValues) => {
+  const handleSubmit = (values: FormValues) => {
     console.log(values)
   }
 
@@ -50,7 +49,7 @@ function Signup() {
           <button type="submit">submit</button>
         </Form>
       </Formik>
-      <a {...routes.home.link()}>return to home</a>
+      <Link to={appRoutes.home}>return to home</Link>
     </>
   )
 }

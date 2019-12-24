@@ -1,15 +1,15 @@
 import React from "react"
 import { useHomeFeedQuery } from "../generated/graphql"
-import { useRoutes } from "../navigation/routerContext"
+import Link from "../navigation/Link"
+import { appRoutes } from "../navigation/NavigationStore"
 
 function Home() {
   const { loading, error, data } = useHomeFeedQuery()
-  const routes = useRoutes()
   return (
     <>
       <nav>
-        <a {...routes.login.link()}>log in</a> |{" "}
-        <a {...routes.signup.link()}>sign up</a>
+        <Link to={appRoutes.login}>log in</Link> |{" "}
+        <Link to={appRoutes.signup}>sign up</Link>
       </nav>
       <main>
         {loading && <p>loading...</p>}

@@ -1,10 +1,11 @@
+import { useObserver } from "mobx-react-lite"
 import React from "react"
-import { RouteDefinition } from "type-route"
-import { useCurrentRoute } from "./routerContext"
+import { useNavigationContext } from "./navigationContext"
+import { AppRoute } from "./NavigationStore"
 
-type RouteProps<N, P> = {
-  route: RouteDefinition<N, P>
-  render: (props: P) => React.ReactNode
+type RouteProps = {
+  route: AppRoute
+  children?: React.ReactNode
 }
 
 /**
@@ -12,9 +13,8 @@ type RouteProps<N, P> = {
  * @template N The route name
  * @template P The route params, which are passed as props to the component
  */
-export default function Route<N extends string, P>(props: RouteProps<N, P>) {
-  const route = useCurrentRoute()
-  return (
-    <>{route.name === props.route.name && props.render(route.params as P)}</>
-  )
+export default function Route(props: RouteProps) {
+  const navigation = useNavigationContext()
+  const route = useObserver(() => navigation.route)
+  return <>{route.name === props.route.name && props.children}</>
 }
