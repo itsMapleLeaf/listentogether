@@ -1,9 +1,12 @@
 import React, { ComponentPropsWithoutRef } from "react"
-import raise from "../common/raise"
+import { raise } from "../common/errors"
 import { useNavigationContext } from "./navigationContext"
 import { AppRoute } from "./NavigationStore"
 
-type LinkProps = { to: AppRoute } & ComponentPropsWithoutRef<"a">
+type LinkProps = {
+  to: AppRoute
+  children: string | React.ReactElement
+} & Omit<ComponentPropsWithoutRef<"a">, "children">
 
 export default function Link({ to, children, ...props }: LinkProps) {
   const navigation = useNavigationContext()
