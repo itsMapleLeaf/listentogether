@@ -1,7 +1,6 @@
 import { ApolloClient } from "apollo-boost"
 import { observable } from "mobx"
-import extractErrorMessage from "../common/extractErrorMessage"
-import raise from "../common/raise"
+import { extractErrorMessage, raise } from "../common/errors"
 import {
   BasicUserInfoDocument,
   BasicUserInfoQuery,

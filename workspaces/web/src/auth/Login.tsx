@@ -2,7 +2,6 @@ import { Form, Formik } from "formik"
 import { observer } from "mobx-react-lite"
 import React from "react"
 import { object, string } from "yup"
-import extractErrorMessage from "../common/extractErrorMessage"
 import Link from "../navigation/Link"
 import { appRoutes } from "../navigation/NavigationStore"
 import FormTextInput from "../ui/FormTextInput"
@@ -50,9 +49,7 @@ function Login({ auth }: Props) {
           </fieldset>
         </Form>
       </Formik>
-      {auth.loginState.type === "error" && (
-        <p>{extractErrorMessage(auth.loginState.error)}</p>
-      )}
+      {auth.loginState.type === "error" && <p>{auth.loginState.error}</p>}
       <Link to={appRoutes.home}>return to home</Link>
     </>
   )

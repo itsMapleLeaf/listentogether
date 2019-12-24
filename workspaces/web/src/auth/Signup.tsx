@@ -49,7 +49,7 @@ function Signup() {
           <button type="submit">submit</button>
         </Form>
       </Formik>
-      <Link to={appRoutes.home}>return to home</Link>
+      <Link to={appRoutes.home}>test</Link>
     </>
   )
 }
