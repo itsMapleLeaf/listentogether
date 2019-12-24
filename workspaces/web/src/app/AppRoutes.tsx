@@ -2,16 +2,25 @@ import React from "react"
 import Login from "../auth/Login"
 import Signup from "../auth/Signup"
 import Route from "../navigation/Route"
-import { useRoutes } from "../navigation/routerContext"
+import { useRouter } from "../navigation/routerContext"
 import Home from "./Home"
 
 export default function AppRoutes() {
-  let routes = useRoutes()
+  const { router } = useRouter()
+  const { routes } = router
+
+  const handleLogin = (token: string) => {
+    // etc.
+  }
+
   return (
     <>
-      <Route route={routes.home} component={Home} />
-      <Route route={routes.login} component={Login} />
-      <Route route={routes.signup} component={Signup} />
+      <Route route={routes.home} render={() => <Home />} />
+      <Route
+        route={routes.login}
+        render={() => <Login onLoginSuccess={handleLogin} />}
+      />
+      <Route route={routes.signup} render={() => <Signup />} />
     </>
   )
 }

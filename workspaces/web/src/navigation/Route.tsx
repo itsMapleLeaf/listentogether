@@ -4,7 +4,7 @@ import { useCurrentRoute } from "./routerContext"
 
 type RouteProps<N, P> = {
   route: RouteDefinition<N, P>
-  component: React.ComponentType<P>
+  render: (props: P) => React.ReactNode
 }
 
 /**
@@ -15,10 +15,6 @@ type RouteProps<N, P> = {
 export default function Route<N extends string, P>(props: RouteProps<N, P>) {
   const route = useCurrentRoute()
   return (
-    <>
-      {route.name === props.route.name
-        ? React.createElement(props.component, route.params as P)
-        : null}
-    </>
+    <>{route.name === props.route.name && props.render(route.params as P)}</>
   )
 }
