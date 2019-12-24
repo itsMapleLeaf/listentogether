@@ -1,7 +1,7 @@
 import { Form, Formik } from "formik"
 import React from "react"
 import { object, string } from "yup"
-import extractApolloError from "../common/extractApolloError"
+import extractErrorMessage from "../common/extractErrorMessage"
 import { useLoginMutation } from "../generated/graphql"
 import { useRoutes } from "../navigation/routerContext"
 import FormTextInput from "../ui/FormTextInput"
@@ -57,7 +57,7 @@ function Login(props: Props) {
           </fieldset>
         </Form>
       </Formik>
-      {error && <p>{extractApolloError(error)}</p>}
+      {error && <p>{extractErrorMessage(error)}</p>}
       <a {...routes.home.link()}>return to home</a>
     </>
   )
