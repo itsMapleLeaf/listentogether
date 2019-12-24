@@ -9,7 +9,7 @@ import { appRoutes } from "../navigation/NavigationStore"
 import Route from "../navigation/Route"
 import Home from "./Home"
 
-function AppRoutes() {
+function App() {
   const navigation = useNavigationContext()
   const client = useApolloClient()
   const auth = useLocalStore(() => new AuthStore(navigation, client))
@@ -33,4 +33,4 @@ function AppRoutes() {
   )
 }
 
-export default observer(AppRoutes)
+export default observer(App)

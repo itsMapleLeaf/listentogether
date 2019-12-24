@@ -2,7 +2,7 @@ import { ApolloProvider } from "@apollo/react-hooks"
 import ApolloClient from "apollo-boost"
 import React from "react"
 import ReactDOM from "react-dom"
-import AppRoutes from "./app/AppRoutes"
+import App from "./app/App"
 import { storedToken } from "./auth/storedToken"
 import { NavigationProvider } from "./navigation/navigationContext"
 import "./ui/index.css"
@@ -22,7 +22,7 @@ const client = new ApolloClient({
 ReactDOM.render(
   <ApolloProvider client={client}>
     <NavigationProvider>
-      <AppRoutes />
+      <App />
     </NavigationProvider>
   </ApolloProvider>,
   document.getElementById("root"),
