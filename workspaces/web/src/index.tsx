@@ -9,7 +9,7 @@ import "./ui/index.css"
 async function main() {
   const store = new RootStore()
 
-  await store.auth.getAuthState()
+  store.auth.getAuthState()
 
   ReactDOM.render(
     <ApolloProvider client={store.apolloClient}>
