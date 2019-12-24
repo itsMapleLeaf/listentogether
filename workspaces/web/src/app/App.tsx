@@ -1,22 +1,14 @@
-import { useApolloClient } from "@apollo/react-hooks"
-import { observer, useLocalStore } from "mobx-react-lite"
-import React, { useEffect } from "react"
-import { AuthStore } from "../auth/AuthStore"
+import { observer } from "mobx-react-lite"
+import React from "react"
 import Login from "../auth/Login"
 import Signup from "../auth/Signup"
-import { useNavigationContext } from "../navigation/navigationContext"
 import { appRoutes } from "../navigation/NavigationStore"
 import Route from "../navigation/Route"
+import { useRootStore } from "../rootStoreContext"
 import Home from "./Home"
 
 function App() {
-  const navigation = useNavigationContext()
-  const client = useApolloClient()
-  const auth = useLocalStore(() => new AuthStore(navigation, client))
-
-  useEffect(() => {
-    auth.getAuthState()
-  }, [auth])
+  const { auth } = useRootStore()
 
   return (
     <>
@@ -24,7 +16,7 @@ function App() {
         <Home isAuthenticated={auth.authState.type === "authenticated"} />
       </Route>
       <Route route={appRoutes.login}>
-        <Login auth={auth} />
+        <Login />
       </Route>
       <Route route={appRoutes.signup}>
         <Signup />

@@ -4,12 +4,8 @@ import React from "react"
 import { object, string } from "yup"
 import Link from "../navigation/Link"
 import { appRoutes } from "../navigation/NavigationStore"
+import { useRootStore } from "../rootStoreContext"
 import FormTextInput from "../ui/FormTextInput"
-import { AuthStore } from "./AuthStore"
-
-type Props = {
-  auth: AuthStore
-}
 
 type FormValues = {
   email: string
@@ -28,7 +24,9 @@ const validationSchema = object<FormValues>({
   password: string().required(),
 })
 
-function Login({ auth }: Props) {
+function Login() {
+  const { auth } = useRootStore()
+
   const handleSubmit = (variables: FormValues) => {
     auth.login(variables)
   }

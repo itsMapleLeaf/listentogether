@@ -1,6 +1,6 @@
 import React, { ComponentPropsWithoutRef } from "react"
 import { raise } from "../common/errors"
-import { useNavigationContext } from "./navigationContext"
+import { useRootStore } from "../rootStoreContext"
 import { AppRoute } from "./NavigationStore"
 
 type LinkProps = {
@@ -9,7 +9,7 @@ type LinkProps = {
 } & Omit<ComponentPropsWithoutRef<"a">, "children">
 
 export default function Link({ to, children, ...props }: LinkProps) {
-  const navigation = useNavigationContext()
+  const { navigation } = useRootStore()
 
   const handleClick = (event?: React.MouseEvent) => {
     event?.preventDefault()

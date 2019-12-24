@@ -1,29 +1,24 @@
 import { ApolloProvider } from "@apollo/react-hooks"
-import ApolloClient from "apollo-boost"
 import React from "react"
 import ReactDOM from "react-dom"
 import App from "./app/App"
-import { storedToken } from "./auth/storedToken"
-import { NavigationProvider } from "./navigation/navigationContext"
+import { RootStore } from "./RootStore"
+import { RootStoreProvider } from "./rootStoreContext"
 import "./ui/index.css"
 
-const client = new ApolloClient({
-  uri: "http://localhost:4000",
-  request: async (operation) => {
-    const token = await storedToken.get()
-    operation.setContext({
-      headers: {
-        authorization: token ? `Bearer ${token}` : "",
-      },
-    })
-  },
-})
+async function main() {
+  const store = new RootStore()
 
-ReactDOM.render(
-  <ApolloProvider client={client}>
-    <NavigationProvider>
-      <App />
-    </NavigationProvider>
-  </ApolloProvider>,
-  document.getElementById("root"),
-)
+  await store.auth.getAuthState()
+
+  ReactDOM.render(
+    <ApolloProvider client={store.apolloClient}>
+      <RootStoreProvider store={store}>
+        <App />
+      </RootStoreProvider>
+    </ApolloProvider>,
+    document.getElementById("root"),
+  )
+}
+
+main().catch(console.error)

@@ -1,6 +1,6 @@
 import { useObserver } from "mobx-react-lite"
 import React from "react"
-import { useNavigationContext } from "./navigationContext"
+import { useRootStore } from "../rootStoreContext"
 import { AppRoute } from "./NavigationStore"
 
 type RouteProps = {
@@ -14,7 +14,7 @@ type RouteProps = {
  * @template P The route params, which are passed as props to the component
  */
 export default function Route(props: RouteProps) {
-  const navigation = useNavigationContext()
+  const { navigation } = useRootStore()
   const route = useObserver(() => navigation.route)
   return <>{route.name === props.route.name && props.children}</>
 }
