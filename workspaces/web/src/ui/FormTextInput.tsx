@@ -8,7 +8,7 @@ type FormTextInputProps = React.ComponentPropsWithoutRef<"input"> & {
 export default function FormTextInput({ label, ...props }: FormTextInputProps) {
   let [field, meta] = useField(props as any)
   return (
-    <div>
+    <div style={{ marginBottom: "1rem" }}>
       <label htmlFor={props.id || props.name}>{label}</label>
       <br />
       <input {...field} {...props} />
