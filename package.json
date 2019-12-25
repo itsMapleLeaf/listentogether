@@ -2,7 +2,8 @@
   "name": "listen-together",
   "private": true,
   "workspaces": [
-    "workspaces/*"
+    "workspaces/api",
+    "workspaces/web"
   ],
   "scripts": {
     "dev": "wsrun dev",
