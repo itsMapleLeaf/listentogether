@@ -3,3 +3,4 @@ dist
 .vscode
 prisma/dev.db
 prisma/migrations
+src/env.ts

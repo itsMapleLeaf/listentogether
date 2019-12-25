@@ -5,9 +5,11 @@
     "workspaces/*"
   ],
   "scripts": {
-    "dev": "wsrun dev"
+    "dev": "wsrun dev",
+    "postinstall": "typesync"
   },
   "devDependencies": {
+    "typesync": "^0.6.1",
     "wsrun": "^5.2.0"
   }
 }
