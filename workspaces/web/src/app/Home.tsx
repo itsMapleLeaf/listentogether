@@ -8,7 +8,7 @@ function Home({ user, token, onLogout }: Props) {
   const api = createApi(token)
 
   const createRoom = async () => {
-    await api.createRoom()
+    console.log(await api.createRoom())
     // redirect to room url
   }
 
