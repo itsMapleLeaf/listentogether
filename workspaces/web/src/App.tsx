@@ -8,6 +8,9 @@ function App() {
     case "loading":
       return <p>loading...</p>
 
+    case "error":
+      return <p>oops! an error occurred: {state.error}</p>
+
     case "anonymous":
       return <button onClick={actions.login}>log in</button>
 
