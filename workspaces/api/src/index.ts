@@ -1,31 +1,30 @@
+import compression from 'compression'
+import cors from 'cors'
 import express from 'express'
 import jwt from 'express-jwt'
-import jwksRsa from 'jwks-rsa'
-import { AUTH0_AUDIENCE, AUTH0_DOMAIN } from './env'
-
-const app = express()
-
-const authConfig = {
-  domain: AUTH0_DOMAIN,
-  audience: AUTH0_AUDIENCE,
-}
+import jwks from 'jwks-rsa'
 
 const checkJwt = jwt({
-  secret: jwksRsa.expressJwtSecret({
+  secret: jwks.expressJwtSecret({
     cache: true,
     rateLimit: true,
     jwksRequestsPerMinute: 5,
-    jwksUri: `https://${authConfig.domain}/.well-known/jwks.json`,
+    jwksUri: 'https://kingdaro.auth0.com/.well-known/jwks.json',
   }),
-
-  audience: authConfig.audience,
-  issuer: `https://${authConfig.domain}/`,
-  algorithm: ['RS256'],
+  audience: 'https://api.listentogether.com',
+  issuer: 'https://kingdaro.auth0.com/',
+  algorithms: ['RS256'],
 })
 
-app.get('/api/external', checkJwt, (req, res) => {
+const app = express()
+
+app.use(cors({ origin: 'http://localhost:3000' }))
+app.use(compression())
+app.use(checkJwt)
+
+app.post('/rooms', (req, res) => {
   res.send({
-    msg: 'Your Access Token was successfully validated!',
+    msg: 'i love you',
   })
 })
 

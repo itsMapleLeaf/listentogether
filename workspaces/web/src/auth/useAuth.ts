@@ -25,6 +25,7 @@ export function useAuth() {
           domain: "kingdaro.auth0.com",
           client_id: "tD5PbNq3BlwfPSLhuAbV6DGvaON7Q6F1",
           redirect_uri: "http://localhost:3000/auth/callback",
+          audience: "https://api.listentogether.com",
         }),
       )
 
