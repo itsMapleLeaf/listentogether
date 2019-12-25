@@ -6,8 +6,13 @@ import { pwrap } from "../common/pwrap"
 type AuthState =
   | { type: "loading" }
   | { type: "error"; error: string }
-  | { type: "authenticated"; user: any; token: string }
+  | { type: "authenticated"; user: AuthUser; token: string }
   | { type: "anonymous" }
+
+export type AuthUser = {
+  name: string
+  picture: string
+}
 
 export function useAuth() {
   const [state, setState] = useState<AuthState>({ type: "loading" })

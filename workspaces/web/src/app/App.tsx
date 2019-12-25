@@ -1,5 +1,6 @@
 import React from "react"
-import { useAuth } from "./auth/useAuth"
+import { useAuth } from "../auth/useAuth"
+import Landing from "./Landing"
 
 function App() {
   const [state, actions] = useAuth()
@@ -15,12 +16,7 @@ function App() {
       return <button onClick={actions.login}>log in</button>
 
     case "authenticated":
-      return (
-        <>
-          <code>{JSON.stringify(state.user)}</code>
-          <button onClick={actions.logout}>log out</button>
-        </>
-      )
+      return <Landing user={state.user} onLogout={actions.logout} />
   }
 }
 
