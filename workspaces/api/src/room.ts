@@ -1,5 +1,6 @@
 import { Photon } from '@prisma/photon'
 import { RequestHandler } from 'express'
+import { humanId } from 'human-id'
 
 const photon = new Photon()
 
@@ -10,7 +11,12 @@ export const createRoomHandler: RequestHandler = async (req, res, next) => {
   try {
     const room =
       (await photon.rooms.findOne({ where: { ownerId: userId } })) ??
-      (await photon.rooms.create({ data: { ownerId: userId } }))
+      (await photon.rooms.create({
+        data: {
+          id: humanId({ capitalize: false, separator: '-' }),
+          ownerId: userId,
+        },
+      }))
 
     res.send({
       roomId: room.id,

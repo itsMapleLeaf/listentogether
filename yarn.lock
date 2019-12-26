@@ -5412,6 +5412,11 @@ https-proxy-agent@^3.0.0:
     agent-base "^4.3.0"
     debug "^3.1.0"
 
+human-id@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/human-id/-/human-id-2.0.0.tgz#6e8df13c8ba50109bf8382807cb0476f74304824"
+  integrity sha512-BLLJKKS/vZqWONMsFXZq/AmKNLJI2OGKXpYYs02zFc2M34G3mwInQOmyqQIoIlkQRcFEpZ7QStfJBMV6GQmJcg==
+
 iconv-lite@0.4.24, iconv-lite@^0.4.24:
   version "0.4.24"
   resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.4.24.tgz#2022b4b25fbddc21d2f524974a474aafe733908b"
