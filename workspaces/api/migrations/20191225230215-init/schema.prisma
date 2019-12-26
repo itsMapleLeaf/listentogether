@@ -1,0 +1,20 @@
+generator photonjs {
+  provider = "photonjs"
+}
+
+datasource sqlite {
+  url = "***"
+  provider = "sqlite"
+}
+
+model Room {
+  id      String  @id @default(uuid())
+  ownerId String  @unique
+  tracks  Track[]
+}
+
+model Track {
+  id         String  @id @default(uuid())
+  title      String
+  youtubeUrl String?
+}
