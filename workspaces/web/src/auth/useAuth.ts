@@ -38,8 +38,8 @@ export function useAuth() {
     async function getAuthState(client: Auth0Client) {
       try {
         if (history.location.pathname.startsWith(`/auth/callback`)) {
-          await client.handleRedirectCallback()
-          history.replace("/")
+          const result = await client.handleRedirectCallback()
+          history.replace(result.appState.path ?? "/")
         }
 
         const user = await client.getUser()
@@ -65,13 +65,15 @@ export function useAuth() {
   const actions = useMemo(
     () => ({
       login() {
-        client?.loginWithRedirect()
+        client?.loginWithRedirect({
+          appState: { path: history.location.pathname },
+        })
       },
       logout() {
         client?.logout()
       },
     }),
-    [client],
+    [client, history.location.pathname],
   )
 
   return [state, actions] as const
