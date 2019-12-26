@@ -3,9 +3,7 @@
   "version": "1.0.0",
   "license": "MIT",
   "scripts": {
-    "dev:node": "ts-node-dev --no-notify --respawn --transpileOnly src/index",
-    "dev:generate": "node scripts/gen-watch",
-    "dev": "npm-run-all --parallel --print-label dev:*",
+    "dev": "ts-node-dev --no-notify --respawn --transpileOnly src/index",
     "generate": "prisma2 generate",
     "prepare": "typesync && yarn generate"
   },
