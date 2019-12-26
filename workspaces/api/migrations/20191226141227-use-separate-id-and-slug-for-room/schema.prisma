@@ -3,7 +3,7 @@ generator photonjs {
 }
 
 datasource sqlite {
-  url      = "file:data.db"
+  url = "***"
   provider = "sqlite"
 }
 

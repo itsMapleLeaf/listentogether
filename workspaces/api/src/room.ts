@@ -12,14 +12,11 @@ export const createRoomHandler: RequestHandler = async (req, res, next) => {
     const room =
       (await photon.rooms.findOne({ where: { ownerId: userId } })) ??
       (await photon.rooms.create({
-        data: {
-          id: humanId({ capitalize: false, separator: '-' }),
-          ownerId: userId,
-        },
+        data: { slug: createRoomSlug(), ownerId: userId },
       }))
 
     res.send({
-      roomId: room.id,
+      slug: room.slug,
       // IDEA: might be useful to tell the user on the frontend whether the room has already existed,
       // so maybe add some extra status value for that
     })
@@ -27,3 +24,5 @@ export const createRoomHandler: RequestHandler = async (req, res, next) => {
     next(error)
   }
 }
+
+const createRoomSlug = () => humanId({ capitalize: false, separator: '-' })
