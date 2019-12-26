@@ -1,7 +1,7 @@
 import { Photon } from '@prisma/photon'
 import { RequestHandler } from 'express'
 
-const photon = new Photon({ debug: true })
+const photon = new Photon()
 
 export const createRoomHandler: RequestHandler = async (req, res, next) => {
   const userId = req.user?.sub
