@@ -1,14 +1,18 @@
 import createAuth0Client from "@auth0/auth0-spa-js"
 import Auth0Client from "@auth0/auth0-spa-js/dist/typings/Auth0Client"
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useState } from "react"
 import { useHistory } from "react-router-dom"
-import { pwrap } from "../common/pwrap"
 
 type AuthState =
   | { type: "loading" }
   | { type: "error"; error: string }
-  | { type: "authenticated"; user: AuthUser; token: string }
-  | { type: "anonymous" }
+  | {
+      type: "authenticated"
+      user: AuthUser
+      token: string
+      client: Auth0Client
+    }
+  | { type: "anonymous"; client: Auth0Client }
 
 export type AuthUser = {
   name: string
@@ -17,25 +21,22 @@ export type AuthUser = {
 
 export function useAuth() {
   const [state, setState] = useState<AuthState>({ type: "loading" })
-  const [client, setClient] = useState<Auth0Client>()
   const history = useHistory()
 
   useEffect(() => {
-    async function createClient() {
-      const [client, clientError] = await pwrap(
-        createAuth0Client({
+    async function getAuthState(): Promise<AuthState> {
+      let client: Auth0Client | undefined
+      try {
+        client = await createAuth0Client({
           domain: "kingdaro.auth0.com",
           client_id: "tD5PbNq3BlwfPSLhuAbV6DGvaON7Q6F1",
           redirect_uri: "http://localhost:3000/auth/callback",
           audience: "https://api.listentogether.com",
-        }),
-      )
+        })
+      } catch (error) {
+        return { type: "error", error: "could not create auth client" }
+      }
 
-      if (!client) console.error(clientError)
-      return client
-    }
-
-    async function getAuthState(client: Auth0Client) {
       try {
         if (history.location.pathname.startsWith(`/auth/callback`)) {
           const result = await client.handleRedirectCallback()
@@ -45,36 +46,17 @@ export function useAuth() {
         const user = await client.getUser()
         const token = await client.getTokenSilently()
 
-        setState(
-          user ? { type: "authenticated", user, token } : { type: "anonymous" },
-        )
+        return user
+          ? { type: "authenticated", user, token, client }
+          : { type: "anonymous", client }
       } catch (error) {
         console.warn("error during auth init:", error)
-        setState({ type: "anonymous" })
+        return { type: "anonymous", client }
       }
     }
 
-    createClient().then((client) => {
-      setClient(client)
-      if (client) {
-        getAuthState(client)
-      }
-    })
+    getAuthState().then(setState)
   }, [history])
 
-  const actions = useMemo(
-    () => ({
-      login() {
-        client?.loginWithRedirect({
-          appState: { path: history.location.pathname },
-        })
-      },
-      logout() {
-        client?.logout()
-      },
-    }),
-    [client, history.location.pathname],
-  )
-
-  return [state, actions] as const
+  return state
 }

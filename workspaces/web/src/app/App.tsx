@@ -1,12 +1,15 @@
 import React from "react"
 import { Route, Switch } from "react-router-dom"
+import { AuthClientProvider } from "../auth/authClientContext"
+import { AuthUserProvider } from "../auth/authUserContext"
 import { useAuth } from "../auth/useAuth"
 import HomePage from "./HomePage"
+import LoginPage from "./LoginPage"
 import RoomPage from "./RoomPage"
 import { routes } from "./routes"
 
 function App() {
-  const [state, actions] = useAuth()
+  const state = useAuth()
 
   switch (state.type) {
     case "loading":
@@ -16,19 +19,34 @@ function App() {
       return <p>oops! an error occurred: {state.error}</p>
 
     case "anonymous":
-      return <button onClick={actions.login}>log in</button>
+      return (
+        <AuthClientProvider client={state.client}>
+          <Switch>
+            <Route exact path={routes.home}>
+              <LoginPage />
+            </Route>
+            <Route path={routes.room(":id")}>
+              <LoginPage />
+            </Route>
+          </Switch>
+        </AuthClientProvider>
+      )
 
     case "authenticated":
       return (
-        <Switch>
-          <Route exact path={routes.home}>
-            <HomePage {...state} onLogout={actions.logout} />
-          </Route>
-          <Route
-            path={routes.room(":id")}
-            render={({ match }) => <RoomPage id={match.params.id} />}
-          />
-        </Switch>
+        <AuthClientProvider client={state.client}>
+          <AuthUserProvider user={state.user}>
+            <Switch>
+              <Route exact path={routes.home}>
+                <HomePage />
+              </Route>
+              <Route
+                path={routes.room(":id")}
+                render={({ match }) => <RoomPage id={match.params.id} />}
+              />
+            </Switch>
+          </AuthUserProvider>
+        </AuthClientProvider>
       )
   }
 }

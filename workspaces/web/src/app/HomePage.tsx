@@ -1,20 +1,16 @@
 import React, { useState } from "react"
 import { useHistory } from "react-router-dom"
-import { AuthUser } from "../auth/useAuth"
-import { createApi } from "../network/api"
+import { useAuthClientContext } from "../auth/authClientContext"
+import { useAuthUserContext } from "../auth/authUserContext"
+import { useApi } from "./useApi"
 import { routes } from "./routes"
 
-type Props = {
-  user: AuthUser
-  token: string
-  onLogout: () => void
-}
-
-function HomePage({ user, token, onLogout }: Props) {
+function HomePage() {
   const [loading, setLoading] = useState(false)
   const history = useHistory()
-
-  const api = createApi(token)
+  const user = useAuthUserContext()
+  const client = useAuthClientContext()
+  const api = useApi()
 
   const createRoom = async () => {
     setLoading(true)
@@ -32,7 +28,7 @@ function HomePage({ user, token, onLogout }: Props) {
       <button disabled={loading} onClick={createRoom}>
         create room
       </button>
-      <button disabled={loading} onClick={onLogout}>
+      <button disabled={loading} onClick={client.logout}>
         log out
       </button>
     </main>
