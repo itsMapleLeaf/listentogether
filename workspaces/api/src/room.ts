@@ -8,13 +8,9 @@ export const createRoomHandler: RequestHandler = async (req, res, next) => {
   if (!userId) return next('userId not found')
 
   try {
-    await photon.connect()
-
     const room =
       (await photon.rooms.findOne({ where: { ownerId: userId } })) ??
       (await photon.rooms.create({ data: { ownerId: userId } }))
-
-    await photon.disconnect()
 
     res.send({
       roomId: room.id,
