@@ -1,25 +1,21 @@
-import React, { useState } from "react"
+import React from "react"
 import { useHistory } from "react-router-dom"
 import { useAuthClientContext } from "../auth/authClientContext"
 import { useAuthUserContext } from "../auth/authUserContext"
+import { useAsync } from "../state/useAsync"
 import { routes } from "./routes"
 import { useApi } from "./useApi"
 
 function HomePage() {
-  const [loading, setLoading] = useState(false)
+  const [{ loading, error }, run] = useAsync()
   const history = useHistory()
   const user = useAuthUserContext()
   const client = useAuthClientContext()
   const api = useApi()
 
   const createRoom = async () => {
-    setLoading(true)
-    try {
-      const { slug } = await api.createRoom()
-      history.push(routes.room(slug))
-    } catch (error) {
-      setLoading(false)
-    }
+    const { slug } = await run(api.createRoom())
+    history.push(routes.room(slug))
   }
 
   return (
@@ -31,6 +27,7 @@ function HomePage() {
       <button disabled={loading} onClick={client.logout}>
         log out
       </button>
+      {error && <p>{error}</p>}
     </main>
   )
 }
