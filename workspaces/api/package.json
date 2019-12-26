@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "ts-node-dev --no-notify --respawn --transpileOnly src/index",
     "generate": "prisma2 generate",
+    "lift": "prisma2 lift",
     "prepare": "typesync && yarn generate"
   },
   "dependencies": {
