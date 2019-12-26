@@ -1,6 +1,7 @@
 import createAuth0Client from "@auth0/auth0-spa-js"
 import Auth0Client from "@auth0/auth0-spa-js/dist/typings/Auth0Client"
 import { useEffect, useMemo, useState } from "react"
+import { useHistory } from "react-router-dom"
 import { pwrap } from "../common/pwrap"
 
 type AuthState =
@@ -17,6 +18,7 @@ export type AuthUser = {
 export function useAuth() {
   const [state, setState] = useState<AuthState>({ type: "loading" })
   const [client, setClient] = useState<Auth0Client>()
+  const history = useHistory()
 
   useEffect(() => {
     async function createClient() {
@@ -35,9 +37,9 @@ export function useAuth() {
 
     async function getAuthState(client: Auth0Client) {
       try {
-        if (window.location.pathname.startsWith(`/auth/callback`)) {
+        if (history.location.pathname.startsWith(`/auth/callback`)) {
           await client.handleRedirectCallback()
-          window.history.replaceState(undefined, document.title, "/")
+          history.replace("/")
         }
 
         const user = await client.getUser()
@@ -58,7 +60,7 @@ export function useAuth() {
         getAuthState(client)
       }
     })
-  }, [])
+  }, [history])
 
   const actions = useMemo(
     () => ({
