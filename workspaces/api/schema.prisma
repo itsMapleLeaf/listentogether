@@ -8,8 +8,9 @@ datasource sqlite {
 }
 
 model Room {
-  id     String  @id @default(uuid())
-  tracks Track[]
+  id      String  @id @default(uuid())
+  ownerId String  @unique
+  tracks  Track[]
 }
 
 model Track {
