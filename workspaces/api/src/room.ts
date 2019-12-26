@@ -1,7 +1,16 @@
+import { Photon } from '@prisma/photon'
 import { RequestHandler } from 'express'
 
-export const createRoomHandler: RequestHandler = (req, res) => {
+const photon = new Photon()
+
+export const createRoomHandler: RequestHandler = async (req, res) => {
+  await photon.connect()
+
+  const room = await photon.rooms.create({ data: {} })
+
   res.send({
-    msg: 'i love you',
+    roomId: room.id,
   })
+
+  await photon.disconnect()
 }
