@@ -1,0 +1,15 @@
+datasource sqlite {
+  url      = "file:data.db"
+  provider = "sqlite"
+}
+
+model Room {
+  id     Int     @id
+  tracks Track[]
+}
+
+model Track {
+  id         Int     @id
+  title      String
+  youtubeUrl String?
+}
