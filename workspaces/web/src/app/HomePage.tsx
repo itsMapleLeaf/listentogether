@@ -2,8 +2,8 @@ import React, { useState } from "react"
 import { useHistory } from "react-router-dom"
 import { useAuthClientContext } from "../auth/authClientContext"
 import { useAuthUserContext } from "../auth/authUserContext"
-import { useApi } from "./useApi"
 import { routes } from "./routes"
+import { useApi } from "./useApi"
 
 function HomePage() {
   const [loading, setLoading] = useState(false)
@@ -15,8 +15,8 @@ function HomePage() {
   const createRoom = async () => {
     setLoading(true)
     try {
-      const { roomId } = await api.createRoom()
-      history.push(routes.room(roomId))
+      const { slug } = await api.createRoom()
+      history.push(routes.room(slug))
     } catch (error) {
       setLoading(false)
     }
