@@ -12,7 +12,7 @@ export function createApi(token: string) {
   }
 
   return {
-    async createRoom() {
+    async createRoom(): Promise<{ roomId: string }> {
       return fetchWithToken(`/rooms`, { method: "post" })
     },
   }

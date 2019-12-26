@@ -1,6 +1,9 @@
 import React from "react"
+import { Route, Switch } from "react-router-dom"
 import { useAuth } from "../auth/useAuth"
-import Home from "./Home"
+import HomePage from "./HomePage"
+import RoomPage from "./RoomPage"
+import { routes } from "./routes"
 
 function App() {
   const [state, actions] = useAuth()
@@ -16,7 +19,17 @@ function App() {
       return <button onClick={actions.login}>log in</button>
 
     case "authenticated":
-      return <Home {...state} onLogout={actions.logout} />
+      return (
+        <Switch>
+          <Route exact path={routes.home}>
+            <HomePage {...state} onLogout={actions.logout} />
+          </Route>
+          <Route
+            path={routes.room(":id")}
+            render={({ match }) => <RoomPage id={match.params.id} />}
+          />
+        </Switch>
+      )
   }
 }
 

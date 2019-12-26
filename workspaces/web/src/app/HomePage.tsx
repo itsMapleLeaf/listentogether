@@ -1,18 +1,29 @@
 import React, { useState } from "react"
+import { useHistory } from "react-router-dom"
 import { AuthUser } from "../auth/useAuth"
 import { createApi } from "../network/api"
+import { routes } from "./routes"
 
-type Props = { user: AuthUser; token: string; onLogout: () => void }
+type Props = {
+  user: AuthUser
+  token: string
+  onLogout: () => void
+}
 
-function Home({ user, token, onLogout }: Props) {
+function HomePage({ user, token, onLogout }: Props) {
   const [loading, setLoading] = useState(false)
+  const history = useHistory()
+
   const api = createApi(token)
 
   const createRoom = async () => {
     setLoading(true)
-    console.log(await api.createRoom())
-    setLoading(false)
-    // redirect to room url
+    try {
+      const { roomId } = await api.createRoom()
+      history.push(routes.room(roomId))
+    } catch (error) {
+      setLoading(false)
+    }
   }
 
   return (
@@ -28,4 +39,4 @@ function Home({ user, token, onLogout }: Props) {
   )
 }
 
-export default Home
+export default HomePage
