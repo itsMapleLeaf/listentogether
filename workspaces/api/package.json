@@ -4,7 +4,8 @@
   "license": "MIT",
   "scripts": {
     "dev": "ts-node-dev --no-notify --respawn --transpileOnly src/index",
-    "postinstall": "typesync"
+    "generate": "prisma2 generate",
+    "postinstall": "typesync && yarn generate"
   },
   "dependencies": {
     "@prisma/photon": "^2.0.0-preview019",
