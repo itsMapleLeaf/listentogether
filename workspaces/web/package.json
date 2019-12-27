@@ -7,8 +7,7 @@
     "dev:codegen": "graphql-codegen --config codegen.yml --watch",
     "dev": "npm-run-all --parallel --print-label dev:*",
     "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "test": "react-scripts test"
   },
   "dependencies": {
     "@apollo/react-hooks": "^3.1.3",
