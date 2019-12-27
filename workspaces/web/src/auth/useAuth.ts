@@ -2,6 +2,7 @@ import createAuth0Client from "@auth0/auth0-spa-js"
 import Auth0Client from "@auth0/auth0-spa-js/dist/typings/Auth0Client"
 import { useEffect, useState } from "react"
 import { useHistory } from "react-router-dom"
+import { assertDefined } from "../common/assertDefined"
 
 type AuthState =
   | { type: "loading" }
@@ -19,6 +20,10 @@ export type AuthUser = {
   picture: string
 }
 
+const redirectUri =
+  process.env.REACT_APP_AUTH0_REDIRECT_URI ||
+  "http://localhost:3000/auth/callback"
+
 export function useAuth() {
   const [state, setState] = useState<AuthState>({ type: "loading" })
   const history = useHistory()
@@ -28,17 +33,26 @@ export function useAuth() {
       let client: Auth0Client | undefined
       try {
         client = await createAuth0Client({
-          domain: "kingdaro.auth0.com",
-          client_id: "tD5PbNq3BlwfPSLhuAbV6DGvaON7Q6F1",
-          redirect_uri: "http://localhost:3000/auth/callback",
-          audience: "https://api.listentogether.com",
+          domain: assertDefined(process.env.REACT_APP_AUTH0_DOMAIN),
+          client_id: assertDefined(process.env.REACT_APP_AUTH0_CLIENT_ID),
+          redirect_uri: redirectUri,
+          audience: assertDefined(process.env.REACT_APP_AUTH0_AUDIENCE),
         })
       } catch (error) {
+        console.error(error)
         return { type: "error", error: "could not create auth client" }
       }
 
+      let authCallbackUrl: URL
       try {
-        if (history.location.pathname.startsWith(`/auth/callback`)) {
+        authCallbackUrl = new URL(redirectUri)
+      } catch (error) {
+        console.error(error)
+        return { type: "error", error: "could not initialize auth state" }
+      }
+
+      try {
+        if (history.location.pathname.startsWith(authCallbackUrl.pathname)) {
           const result = await client.handleRedirectCallback()
           history.replace(result.appState.path ?? "/")
         }
