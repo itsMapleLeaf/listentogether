@@ -8,26 +8,44 @@ import {
 import { Photon } from '@prisma/photon'
 import compression from 'compression'
 import cors from 'cors'
-import express from 'express'
+import { GraphQLServer } from 'graphql-yoga'
+import { makeSchema, queryType } from 'nexus'
+import { join } from 'path'
 import WebSocket from 'ws'
 import { checkJwt } from './auth'
 import { createRoomHandler } from './room'
 
+// const RoomTracks = subscriptionField('tracks', )
+
+const Query = queryType({
+  definition(t) {
+    t.string('test', () => 'hi')
+  },
+})
+
+const schema = makeSchema({
+  types: [Query],
+  outputs: {
+    schema: join(__dirname, 'generated/schema.graphql'),
+    typegen: join(__dirname, 'generated/nexus.d.ts'),
+  },
+})
+
 const photon = new Photon()
 
-function startHttpServer() {
-  const app = express()
+async function startHttpServer() {
+  const server = new GraphQLServer({
+    schema,
+  })
 
-  app.use(cors({ origin: 'http://localhost:3000' }))
-  app.use(compression())
-  app.use(checkJwt)
+  server.express.use(cors({ origin: 'http://localhost:3000' }))
+  server.express.use(compression())
 
-  app.post('/rooms', createRoomHandler)
+  server.express.post('/api/rooms', checkJwt, createRoomHandler)
 
   const port = Number(process.env.PORT) || 4000
-  app.listen(port, () => {
-    console.log(`API listening on http://localhost:${port}`)
-  })
+  await server.start({ port })
+  console.log(`API listening on http://localhost:${port}`)
 }
 
 function startSocketServer() {
@@ -92,5 +110,5 @@ function startSocketServer() {
   server.on('error', () => {})
 }
 
-startHttpServer()
+startHttpServer().catch(console.error)
 startSocketServer()
