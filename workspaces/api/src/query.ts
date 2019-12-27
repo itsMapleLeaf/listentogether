@@ -7,7 +7,7 @@ export const Query = queryType({
     t.field('room', {
       type: Room,
       args: {
-        slug: stringArg(),
+        slug: stringArg({ nullable: false }),
       },
       async resolve(_, { slug }) {
         const roomClient = photon.rooms.findOne({ where: { slug } })

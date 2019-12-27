@@ -1,0 +1,5 @@
+mutation AddYouTubeTrack($roomSlug: String!, $youtubeUrl: String!) {
+  addYouTubeTrack(roomSlug: $roomSlug, youtubeUrl: $youtubeUrl) {
+    success
+  }
+}

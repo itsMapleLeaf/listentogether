@@ -1,37 +1,59 @@
 import React, { useState } from "react"
 import { extractErrorMessage } from "../common/extractErrorMessage"
-import { useRoomTracksQuery } from "../generated/graphql"
+import {
+  useAddYouTubeTrackMutation,
+  useRoomTracksQuery,
+} from "../generated/graphql"
 
 type Props = { slug: string }
 
 function RoomPage({ slug }: Props) {
-  const { loading, error, data } = useRoomTracksQuery({ variables: { slug } })
+  const tracksQuery = useRoomTracksQuery({ variables: { slug } })
   const [newTrackUrl, setNewTrackUrl] = useState("")
+  const [addTrack, addTrackMutation] = useAddYouTubeTrackMutation()
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
-    // sendCommand({ type: "client-add-track", youtubeUrl: newTrackUrl })
+
+    try {
+      await addTrack({
+        variables: {
+          roomSlug: slug,
+          youtubeUrl: newTrackUrl,
+        },
+      })
+    } catch {}
+
     setNewTrackUrl("")
   }
 
   return (
     <main>
       <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Add a youtube URL..."
-          value={newTrackUrl}
-          onChange={(e) => setNewTrackUrl(e.target.value)}
-        />
-        <button type="submit">add</button>
+        <fieldset disabled={addTrackMutation.loading}>
+          <input
+            type="text"
+            placeholder="Add a youtube URL..."
+            value={newTrackUrl}
+            onChange={(e) => setNewTrackUrl(e.target.value)}
+          />
+          <button type="submit">add</button>
+        </fieldset>
+        {addTrackMutation.error && (
+          <p>
+            could not add track: {extractErrorMessage(addTrackMutation.error)}
+          </p>
+        )}
       </form>
 
       <h2>track list</h2>
-      {loading && <p>loading...</p>}
-      {error && <p>an error occurred: {extractErrorMessage(error)}</p>}
-      {data && (
+      {tracksQuery.loading && <p>loading...</p>}
+      {tracksQuery.error && (
+        <p>an error occurred: {extractErrorMessage(tracksQuery.error)}</p>
+      )}
+      {tracksQuery.data && (
         <ul>
-          {data.room.tracks.map((track) => (
+          {tracksQuery.data.room.tracks.map((track) => (
             <li key={track.id}>{track.youtubeUrl}</li>
           ))}
         </ul>

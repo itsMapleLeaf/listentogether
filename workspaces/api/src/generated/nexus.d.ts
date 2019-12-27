@@ -12,6 +12,11 @@ export interface NexusGenInputs {}
 export interface NexusGenEnums {}
 
 export interface NexusGenRootTypes {
+  AddYouTubeTrackResult: {
+    // root type
+    success: boolean // Boolean!
+  }
+  Mutation: {}
   Query: {}
   Room: {
     // root type
@@ -32,6 +37,14 @@ export interface NexusGenRootTypes {
 export interface NexusGenAllTypes extends NexusGenRootTypes {}
 
 export interface NexusGenFieldTypes {
+  AddYouTubeTrackResult: {
+    // field return type
+    success: boolean // Boolean!
+  }
+  Mutation: {
+    // field return type
+    addYouTubeTrack: NexusGenRootTypes["AddYouTubeTrackResult"] // AddYouTubeTrackResult!
+  }
   Query: {
     // field return type
     room: NexusGenRootTypes["Room"] // Room!
@@ -48,10 +61,17 @@ export interface NexusGenFieldTypes {
 }
 
 export interface NexusGenArgTypes {
+  Mutation: {
+    addYouTubeTrack: {
+      // args
+      roomSlug: string // String!
+      youtubeUrl: string // String!
+    }
+  }
   Query: {
     room: {
       // args
-      slug?: string | null // String
+      slug: string // String!
     }
   }
 }
@@ -60,7 +80,12 @@ export interface NexusGenAbstractResolveReturnTypes {}
 
 export interface NexusGenInheritedFields {}
 
-export type NexusGenObjectNames = "Query" | "Room" | "Track"
+export type NexusGenObjectNames =
+  | "AddYouTubeTrackResult"
+  | "Mutation"
+  | "Query"
+  | "Room"
+  | "Track"
 
 export type NexusGenInputNames = never
 

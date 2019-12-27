@@ -8723,7 +8723,7 @@ nexus-prisma@^0.6.1:
     nexus "^0.12.0-rc.4"
     pluralize "^8.0.0"
 
-nexus@^0.12.0-rc.4:
+nexus@^0.12.0-rc.4, nexus@^0.12.0-rc.5:
   version "0.12.0-rc.5"
   resolved "https://registry.yarnpkg.com/nexus/-/nexus-0.12.0-rc.5.tgz#98232f4ced045353892bfc9e06a0ff383143ba22"
   integrity sha512-eDZVVwjndggBbcMtqniSXnPhcz605zYS7jwcYb7LIq2uCUPa5vKE/mQ/LQIfaCN0aLqYtch1UnRq0nf41V1FDg==
