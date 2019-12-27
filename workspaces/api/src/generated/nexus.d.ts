@@ -13,6 +13,16 @@ export interface NexusGenEnums {}
 
 export interface NexusGenRootTypes {
   Query: {}
+  Room: {
+    // root type
+    slug: string // String!
+    tracks: NexusGenRootTypes["Track"][] // [Track!]!
+  }
+  Track: {
+    // root type
+    id: string // ID!
+    youtubeUrl: string // String!
+  }
   String: string
   Int: number
   Float: number
@@ -25,17 +35,34 @@ export interface NexusGenAllTypes extends NexusGenRootTypes {}
 export interface NexusGenFieldTypes {
   Query: {
     // field return type
-    test: string // String!
+    room: NexusGenRootTypes["Room"] // Room!
+  }
+  Room: {
+    // field return type
+    slug: string // String!
+    tracks: NexusGenRootTypes["Track"][] // [Track!]!
+  }
+  Track: {
+    // field return type
+    id: string // ID!
+    youtubeUrl: string // String!
   }
 }
 
-export interface NexusGenArgTypes {}
+export interface NexusGenArgTypes {
+  Query: {
+    room: {
+      // args
+      slug?: string | null // String
+    }
+  }
+}
 
 export interface NexusGenAbstractResolveReturnTypes {}
 
 export interface NexusGenInheritedFields {}
 
-export type NexusGenObjectNames = "Query"
+export type NexusGenObjectNames = "Query" | "Room" | "Track"
 
 export type NexusGenInputNames = never
 

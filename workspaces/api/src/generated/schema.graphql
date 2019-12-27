@@ -2,5 +2,15 @@
 ### Do not make changes to this file directly
 
 type Query {
-  test: String!
+  room(slug: String): Room!
+}
+
+type Room {
+  slug: String!
+  tracks: [Track!]!
+}
+
+type Track {
+  id: ID!
+  youtubeUrl: String!
 }
