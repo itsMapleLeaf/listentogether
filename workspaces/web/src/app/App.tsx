@@ -42,7 +42,7 @@ function App() {
               </Route>
               <Route
                 path={routes.room(":slug")}
-                render={({ match }) => <RoomPage id={match.params.slug} />}
+                render={({ match }) => <RoomPage slug={match.params.slug} />}
               />
             </Switch>
           </AuthUserProvider>
