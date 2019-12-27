@@ -15,7 +15,6 @@ export interface NexusGenRootTypes {
   Query: {}
   Room: {
     // root type
-    slug: string // String!
     tracks: NexusGenRootTypes["Track"][] // [Track!]!
   }
   Track: {
@@ -39,7 +38,6 @@ export interface NexusGenFieldTypes {
   }
   Room: {
     // field return type
-    slug: string // String!
     tracks: NexusGenRootTypes["Track"][] // [Track!]!
   }
   Track: {

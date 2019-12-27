@@ -8,71 +8,14 @@ import {
 import compression from 'compression'
 import cors from 'cors'
 import { GraphQLServer } from 'graphql-yoga'
-import { makeSchema, objectType, queryType, stringArg } from 'nexus'
-import { join } from 'path'
 import WebSocket from 'ws'
 import { checkJwt } from './auth'
-import { raise } from './common/raise'
 import { photon } from './photon'
 import { createRoomHandler } from './room'
-
-const Query = queryType({
-  definition(t) {
-    t.field('room', {
-      type: Room,
-      args: {
-        slug: stringArg(),
-      },
-      async resolve(_, { slug }) {
-        const roomClient = photon.rooms.findOne({ where: { slug } })
-
-        const room = (await roomClient) ?? raise('room does not exist')
-        const tracks = await roomClient.tracks()
-
-        return {
-          slug: room.slug,
-          tracks: tracks.map(t => ({
-            id: t.id,
-            youtubeUrl: t.youtubeUrl || '',
-          })),
-        }
-      },
-    })
-  },
-})
-
-const Room = objectType({
-  name: 'Room',
-  definition(t) {
-    t.string('slug')
-    t.field('tracks', {
-      type: Track,
-      list: true,
-    })
-  },
-})
-
-const Track = objectType({
-  name: 'Track',
-  definition(t) {
-    t.id('id')
-    t.string('youtubeUrl')
-  },
-})
-
-const schema = makeSchema({
-  types: [Query],
-  outputs: {
-    schema: join(__dirname, 'generated/schema.graphql'),
-    typegen: join(__dirname, 'generated/nexus.d.ts'),
-  },
-  prettierConfig: join(__dirname, '../../../.prettierrc'),
-})
+import { schema } from './schema'
 
 async function startHttpServer() {
-  const server = new GraphQLServer({
-    schema,
-  })
+  const server = new GraphQLServer({ schema })
 
   server.express.use(cors({ origin: 'http://localhost:3000' }))
   server.express.use(compression())

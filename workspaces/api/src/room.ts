@@ -1,6 +1,18 @@
 import { RequestHandler } from 'express'
 import { humanId } from 'human-id'
+import { objectType } from 'nexus'
 import { photon } from './photon'
+import { Track } from './track'
+
+export const Room = objectType({
+  name: 'Room',
+  definition(t) {
+    t.field('tracks', {
+      type: Track,
+      list: true,
+    })
+  },
+})
 
 export const createRoomHandler: RequestHandler = async (req, res, next) => {
   const userId = req.user?.sub
