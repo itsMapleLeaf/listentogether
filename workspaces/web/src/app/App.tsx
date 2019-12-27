@@ -5,7 +5,7 @@ import { AuthUserProvider } from "../auth/authUserContext"
 import { useAuth } from "../auth/useAuth"
 import HomePage from "./HomePage"
 import LoginPage from "./LoginPage"
-import RoomPage from "./RoomPage"
+import RoomPage from "../room/RoomPage"
 import { routes } from "./routes"
 
 function App() {
