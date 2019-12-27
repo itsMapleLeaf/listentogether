@@ -29,6 +29,7 @@ const schema = makeSchema({
     schema: join(__dirname, 'generated/schema.graphql'),
     typegen: join(__dirname, 'generated/nexus.d.ts'),
   },
+  prettierConfig: join(__dirname, '../../../.prettierrc'),
 })
 
 async function startHttpServer() {
