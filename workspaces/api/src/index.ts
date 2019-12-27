@@ -5,7 +5,6 @@ import {
   parseCommand,
   ServerCommand,
 } from '@listen-together/shared'
-import { Photon } from '@prisma/photon'
 import compression from 'compression'
 import cors from 'cors'
 import { GraphQLServer } from 'graphql-yoga'
@@ -13,6 +12,7 @@ import { makeSchema, queryType } from 'nexus'
 import { join } from 'path'
 import WebSocket from 'ws'
 import { checkJwt } from './auth'
+import { photon } from './photon'
 import { createRoomHandler } from './room'
 
 // const RoomTracks = subscriptionField('tracks', )
@@ -30,8 +30,6 @@ const schema = makeSchema({
     typegen: join(__dirname, 'generated/nexus.d.ts'),
   },
 })
-
-const photon = new Photon()
 
 async function startHttpServer() {
   const server = new GraphQLServer({
