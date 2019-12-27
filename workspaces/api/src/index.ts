@@ -1,3 +1,10 @@
+import {
+  ClientCommand,
+  createBroadcast,
+  createSendCommand,
+  parseCommand,
+  ServerCommand,
+} from '@listen-together/shared'
 import { Photon } from '@prisma/photon'
 import compression from 'compression'
 import cors from 'cors'
@@ -27,12 +34,16 @@ function startSocketServer() {
   const port = Number(process.env.SOCKET_PORT) || 5000
   const server = new WebSocket.Server({ port })
 
+  const broadcast = createBroadcast<ServerCommand>(() => server.clients)
+
   server.on('connection', (socket, request) => {
     console.log(`new client ${request.connection.remoteAddress}`)
+
+    const sendCommand = createSendCommand<ServerCommand>(() => socket)
     let clientRoomSlug: string | undefined
 
     socket.on('message', async data => {
-      const message = JSON.parse(String(data))
+      const message = parseCommand<ClientCommand>(data)
 
       switch (message.type) {
         case 'client-set-slug': {
@@ -46,7 +57,7 @@ function startSocketServer() {
           })
 
           const tracks = await room.tracks()
-          socket.send(JSON.stringify({ type: 'server-update-tracks', tracks }))
+          sendCommand({ type: 'server-update-tracks', tracks })
           break
         }
 
@@ -66,11 +77,7 @@ function startSocketServer() {
           })
 
           const tracks = await room.tracks()
-          server.clients.forEach(client => {
-            client.send(
-              JSON.stringify({ type: 'server-update-tracks', tracks }),
-            )
-          })
+          broadcast({ type: 'server-update-tracks', tracks })
 
           break
         }

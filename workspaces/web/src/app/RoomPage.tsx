@@ -1,24 +1,40 @@
-import React, { useEffect, useRef, useState } from "react"
+import {
+  ClientCommand,
+  createSendCommand,
+  parseCommand,
+  ServerCommand,
+} from "@listen-together/shared"
+import React, { useCallback, useEffect, useRef, useState } from "react"
 
 type Props = { slug: string }
 
 function RoomPage({ slug }: Props) {
-  const [tracks, setTracks] = useState<{ id: string; youtubeUrl: string }[]>([])
+  type Track = {
+    id: string
+    youtubeUrl?: string | null
+  }
+
+  const [tracks, setTracks] = useState<Track[]>([])
   const [newTrackUrl, setNewTrackUrl] = useState("")
+
   const socketRef = useRef<WebSocket>()
+
+  const sendCommand = useCallback(
+    createSendCommand<ClientCommand>(() => socketRef.current),
+    [],
+  )
 
   useEffect(() => {
     const socket = new WebSocket(`ws://localhost:5000`)
 
     socket.onopen = () => {
       socketRef.current = socket
-
-      socket.send(JSON.stringify({ type: "client-set-slug", roomSlug: slug }))
-      socket.send(JSON.stringify({ type: "client-request-tracks" }))
+      sendCommand({ type: "client-set-slug", roomSlug: slug })
+      sendCommand({ type: "client-request-tracks" })
     }
 
     socket.onmessage = ({ data }) => {
-      const message = JSON.parse(String(data))
+      const message = parseCommand<ServerCommand>(data)
       switch (message.type) {
         case "server-update-tracks":
           setTracks(message.tracks)
@@ -41,14 +57,12 @@ function RoomPage({ slug }: Props) {
       socket.onmessage = null
       socket.close()
     }
-  }, [slug])
+  }, [sendCommand, slug])
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault()
+    sendCommand({ type: "client-add-track", youtubeUrl: newTrackUrl })
     setNewTrackUrl("")
-    socketRef.current?.send(
-      JSON.stringify({ type: "client-add-track", youtubeUrl: newTrackUrl }),
-    )
   }
 
   return (

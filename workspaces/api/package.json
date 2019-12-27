@@ -9,6 +9,7 @@
     "prepare": "typesync && yarn generate"
   },
   "dependencies": {
+    "@listen-together/shared": "*",
     "@prisma/photon": "^2.0.0-preview019",
     "auth0": "^2.20.0",
     "compression": "^1.7.4",
