@@ -9,7 +9,6 @@
     "prepare": "typesync && yarn generate"
   },
   "dependencies": {
-    "@listen-together/shared": "*",
     "@prisma/photon": "^2.0.0-preview019",
     "auth0": "^2.20.0",
     "compression": "^1.7.4",
@@ -24,8 +23,7 @@
     "rxjs": "^6.5.4",
     "rxjs-async-iterator": "^1.0.1",
     "ts-node": "^8.5.4",
-    "typescript": "~3.7.4",
-    "ws": "^7.2.1"
+    "typescript": "~3.7.4"
   },
   "devDependencies": {
     "@types/auth0": "^2.20.0",
@@ -34,7 +32,6 @@
     "@types/express": "^4.17.2",
     "@types/express-jwt": "^0.0.42",
     "@types/node": "12.12.21",
-    "@types/ws": "^6.0.4",
     "npm-run-all": "^4.1.5",
     "prisma2": "^2.0.0-preview019",
     "ts-node-dev": "^1.0.0-pre.44",
