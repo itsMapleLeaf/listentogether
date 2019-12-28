@@ -1,16 +1,31 @@
 import { RequestHandler } from 'express'
 import { humanId } from 'human-id'
-import { objectType } from 'nexus'
+import { objectType, stringArg, subscriptionField } from 'nexus'
 import { photon } from './photon'
+import { pubsub } from './pubsub'
 import { Track } from './track'
 
 export const Room = objectType({
   name: 'Room',
   definition(t) {
-    t.field('tracks', {
-      type: Track,
-      list: true,
-    })
+    t.list.field('tracks', { type: Track })
+  },
+})
+
+export const roomSubscriptionField = subscriptionField('room', {
+  type: Room,
+
+  args: {
+    slug: stringArg({ required: true }),
+  },
+
+  async resolve(_, { slug }) {
+    const tracks = await photon.rooms.findOne({ where: { slug } }).tracks()
+    return { tracks }
+  },
+
+  subscribe() {
+    return pubsub.asyncIterator('TRACKS_UPDATED')
   },
 })
 

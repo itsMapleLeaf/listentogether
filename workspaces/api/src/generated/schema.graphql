@@ -20,6 +20,10 @@ type Room {
   tracks: [Track!]!
 }
 
+type Subscription {
+  room(slug: String!): Room!
+}
+
 type Track {
   id: ID!
   youtubeUrl: String!

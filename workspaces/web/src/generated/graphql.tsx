@@ -42,11 +42,53 @@ export type Room = {
   tracks: Array<Track>,
 };
 
+export type Subscription = {
+   __typename?: 'Subscription',
+  room: Room,
+};
+
+
+export type SubscriptionRoomArgs = {
+  slug: Scalars['String']
+};
+
 export type Track = {
    __typename?: 'Track',
   id: Scalars['ID'],
   youtubeUrl: Scalars['String'],
 };
+
+export type RoomTracksSubscriptionVariables = {
+  slug: Scalars['String']
+};
+
+
+export type RoomTracksSubscription = (
+  { __typename?: 'Subscription' }
+  & { room: (
+    { __typename?: 'Room' }
+    & { tracks: Array<(
+      { __typename?: 'Track' }
+      & Pick<Track, 'id' | 'youtubeUrl'>
+    )> }
+  ) }
+);
+
+export type InitialRoomTracksQueryVariables = {
+  slug: Scalars['String']
+};
+
+
+export type InitialRoomTracksQuery = (
+  { __typename?: 'Query' }
+  & { room: (
+    { __typename?: 'Room' }
+    & { tracks: Array<(
+      { __typename?: 'Track' }
+      & Pick<Track, 'id' | 'youtubeUrl'>
+    )> }
+  ) }
+);
 
 export type AddYouTubeTrackMutationVariables = {
   roomSlug: Scalars['String'],
@@ -62,23 +104,75 @@ export type AddYouTubeTrackMutation = (
   ) }
 );
 
-export type RoomTracksQueryVariables = {
-  slug: Scalars['String']
-};
 
+export const RoomTracksDocument = gql`
+    subscription RoomTracks($slug: String!) {
+  room(slug: $slug) {
+    tracks {
+      id
+      youtubeUrl
+    }
+  }
+}
+    `;
 
-export type RoomTracksQuery = (
-  { __typename?: 'Query' }
-  & { room: (
-    { __typename?: 'Room' }
-    & { tracks: Array<(
-      { __typename?: 'Track' }
-      & Pick<Track, 'id' | 'youtubeUrl'>
-    )> }
-  ) }
-);
+/**
+ * __useRoomTracksSubscription__
+ *
+ * To run a query within a React component, call `useRoomTracksSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useRoomTracksSubscription` returns an object from Apollo Client that contains loading, error, and data properties 
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useRoomTracksSubscription({
+ *   variables: {
+ *      slug: // value for 'slug'
+ *   },
+ * });
+ */
+export function useRoomTracksSubscription(baseOptions?: ApolloReactHooks.SubscriptionHookOptions<RoomTracksSubscription, RoomTracksSubscriptionVariables>) {
+        return ApolloReactHooks.useSubscription<RoomTracksSubscription, RoomTracksSubscriptionVariables>(RoomTracksDocument, baseOptions);
+      }
+export type RoomTracksSubscriptionHookResult = ReturnType<typeof useRoomTracksSubscription>;
+export type RoomTracksSubscriptionResult = ApolloReactCommon.SubscriptionResult<RoomTracksSubscription>;
+export const InitialRoomTracksDocument = gql`
+    query InitialRoomTracks($slug: String!) {
+  room(slug: $slug) {
+    tracks {
+      id
+      youtubeUrl
+    }
+  }
+}
+    `;
 
-
+/**
+ * __useInitialRoomTracksQuery__
+ *
+ * To run a query within a React component, call `useInitialRoomTracksQuery` and pass it any options that fit your needs.
+ * When your component renders, `useInitialRoomTracksQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useInitialRoomTracksQuery({
+ *   variables: {
+ *      slug: // value for 'slug'
+ *   },
+ * });
+ */
+export function useInitialRoomTracksQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<InitialRoomTracksQuery, InitialRoomTracksQueryVariables>) {
+        return ApolloReactHooks.useQuery<InitialRoomTracksQuery, InitialRoomTracksQueryVariables>(InitialRoomTracksDocument, baseOptions);
+      }
+export function useInitialRoomTracksLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<InitialRoomTracksQuery, InitialRoomTracksQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<InitialRoomTracksQuery, InitialRoomTracksQueryVariables>(InitialRoomTracksDocument, baseOptions);
+        }
+export type InitialRoomTracksQueryHookResult = ReturnType<typeof useInitialRoomTracksQuery>;
+export type InitialRoomTracksLazyQueryHookResult = ReturnType<typeof useInitialRoomTracksLazyQuery>;
+export type InitialRoomTracksQueryResult = ApolloReactCommon.QueryResult<InitialRoomTracksQuery, InitialRoomTracksQueryVariables>;
 export const AddYouTubeTrackDocument = gql`
     mutation AddYouTubeTrack($roomSlug: String!, $youtubeUrl: String!) {
   addYouTubeTrack(roomSlug: $roomSlug, youtubeUrl: $youtubeUrl) {
@@ -112,39 +206,3 @@ export function useAddYouTubeTrackMutation(baseOptions?: ApolloReactHooks.Mutati
 export type AddYouTubeTrackMutationHookResult = ReturnType<typeof useAddYouTubeTrackMutation>;
 export type AddYouTubeTrackMutationResult = ApolloReactCommon.MutationResult<AddYouTubeTrackMutation>;
 export type AddYouTubeTrackMutationOptions = ApolloReactCommon.BaseMutationOptions<AddYouTubeTrackMutation, AddYouTubeTrackMutationVariables>;
-export const RoomTracksDocument = gql`
-    query RoomTracks($slug: String!) {
-  room(slug: $slug) {
-    tracks {
-      id
-      youtubeUrl
-    }
-  }
-}
-    `;
-
-/**
- * __useRoomTracksQuery__
- *
- * To run a query within a React component, call `useRoomTracksQuery` and pass it any options that fit your needs.
- * When your component renders, `useRoomTracksQuery` returns an object from Apollo Client that contains loading, error, and data properties 
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useRoomTracksQuery({
- *   variables: {
- *      slug: // value for 'slug'
- *   },
- * });
- */
-export function useRoomTracksQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<RoomTracksQuery, RoomTracksQueryVariables>) {
-        return ApolloReactHooks.useQuery<RoomTracksQuery, RoomTracksQueryVariables>(RoomTracksDocument, baseOptions);
-      }
-export function useRoomTracksLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<RoomTracksQuery, RoomTracksQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<RoomTracksQuery, RoomTracksQueryVariables>(RoomTracksDocument, baseOptions);
-        }
-export type RoomTracksQueryHookResult = ReturnType<typeof useRoomTracksQuery>;
-export type RoomTracksLazyQueryHookResult = ReturnType<typeof useRoomTracksLazyQuery>;
-export type RoomTracksQueryResult = ApolloReactCommon.QueryResult<RoomTracksQuery, RoomTracksQueryVariables>;

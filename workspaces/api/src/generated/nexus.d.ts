@@ -22,6 +22,7 @@ export interface NexusGenRootTypes {
     // root type
     tracks: NexusGenRootTypes["Track"][] // [Track!]!
   }
+  Subscription: {}
   Track: {
     // root type
     id: string // ID!
@@ -53,6 +54,10 @@ export interface NexusGenFieldTypes {
     // field return type
     tracks: NexusGenRootTypes["Track"][] // [Track!]!
   }
+  Subscription: {
+    // field return type
+    room: NexusGenRootTypes["Room"] // Room!
+  }
   Track: {
     // field return type
     id: string // ID!
@@ -74,6 +79,12 @@ export interface NexusGenArgTypes {
       slug: string // String!
     }
   }
+  Subscription: {
+    room: {
+      // args
+      slug: string // String!
+    }
+  }
 }
 
 export interface NexusGenAbstractResolveReturnTypes {}
@@ -85,6 +96,7 @@ export type NexusGenObjectNames =
   | "Mutation"
   | "Query"
   | "Room"
+  | "Subscription"
   | "Track"
 
 export type NexusGenInputNames = never
