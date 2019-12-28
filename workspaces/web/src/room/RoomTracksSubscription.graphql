@@ -1,8 +1,0 @@
-subscription RoomTracks($slug: String!) {
-  room(slug: $slug) {
-    tracks {
-      id
-      youtubeUrl
-    }
-  }
-}

@@ -1,8 +1,0 @@
-query InitialRoomTracks($slug: String!) {
-  room(slug: $slug) {
-    tracks {
-      id
-      youtubeUrl
-    }
-  }
-}

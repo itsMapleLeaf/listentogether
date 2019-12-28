@@ -1,17 +1,48 @@
+import { useQuery, useSubscription } from "@apollo/react-hooks"
+import gql from "graphql-tag"
 import React from "react"
 import { extractErrorMessage } from "../common/extractErrorMessage"
-import { useRoomSubscription, useRoomTracksQuery } from "../generated/graphql"
+import {
+  InitialRoomTracksQuery,
+  InitialRoomTracksQueryVariables,
+  RoomTracksSubscription,
+  RoomTracksSubscriptionVariables,
+} from "../generated/graphql"
 
 type Props = { roomSlug: string }
 
-function TrackList({ roomSlug }: Props) {
-  const { data, loading, error } = useRoomTracksQuery({
-    variables: { slug: roomSlug },
-  })
+const initialTracksQuery = gql`
+  query InitialRoomTracks($slug: String!) {
+    room(slug: $slug) {
+      tracks {
+        id
+        youtubeUrl
+      }
+    }
+  }
+`
 
-  const { data: subscriptionData } = useRoomSubscription({
-    variables: { slug: roomSlug },
-  })
+const tracksSubscription = gql`
+  subscription RoomTracks($slug: String!) {
+    room(slug: $slug) {
+      tracks {
+        id
+        youtubeUrl
+      }
+    }
+  }
+`
+
+function TrackList({ roomSlug }: Props) {
+  const { data, loading, error } = useQuery<
+    InitialRoomTracksQuery,
+    InitialRoomTracksQueryVariables
+  >(initialTracksQuery, { variables: { slug: roomSlug } })
+
+  const { data: subscriptionData } = useSubscription<
+    RoomTracksSubscription,
+    RoomTracksSubscriptionVariables
+  >(tracksSubscription, { variables: { slug: roomSlug } })
 
   const tracks = (subscriptionData || data)?.room.tracks
 
