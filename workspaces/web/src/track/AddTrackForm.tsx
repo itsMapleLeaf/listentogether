@@ -4,16 +4,16 @@ import { extractErrorMessage } from "../common/extractErrorMessage"
 import { useAsync } from "../state/useAsync"
 
 type Props = {
-  roomSlug: string
+  roomId: string
 }
 
-function AddTrackForm({ roomSlug }: Props) {
+function AddTrackForm(props: Props) {
   const [newTrackUrl, setNewTrackUrl] = useState("")
   const [{ loading, error }, run] = useAsync()
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
-    await run(addYoutubeTrack(roomSlug, newTrackUrl))
+    await run(addYoutubeTrack(props.roomId, newTrackUrl))
     setNewTrackUrl("")
   }
 

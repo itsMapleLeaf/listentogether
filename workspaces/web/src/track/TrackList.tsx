@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react"
 import { watchTracks } from "../api"
 
-type Props = { roomSlug: string }
+type Props = { roomId: string }
 
-function TrackList({ roomSlug }: Props) {
+function TrackList(props: Props) {
   const [tracks, setTracks] = useState()
 
-  useEffect(() => watchTracks(roomSlug, setTracks), [roomSlug])
+  useEffect(() => watchTracks(props.roomId, setTracks), [props.roomId])
 
   return (
     <>

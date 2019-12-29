@@ -25,7 +25,7 @@ function App() {
             <Route exact path={routes.home}>
               <LoginPage />
             </Route>
-            <Route path={routes.room(":slug")}>
+            <Route path={routes.room(":id")}>
               <LoginPage />
             </Route>
           </Switch>
@@ -41,8 +41,8 @@ function App() {
                 <HomePage />
               </Route>
               <Route
-                path={routes.room(":slug")}
-                render={({ match }) => <RoomPage slug={match.params.slug} />}
+                path={routes.room(":id")}
+                render={({ match }) => <RoomPage id={match.params.id} />}
               />
             </Switch>
           </AuthUserProvider>

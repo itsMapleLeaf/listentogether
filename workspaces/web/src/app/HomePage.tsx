@@ -13,8 +13,8 @@ function HomePage() {
   const client = useAuthClientContext()
 
   const handleCreateRoom = async () => {
-    const { slug } = await run(createRoom())
-    history.push(routes.room(slug))
+    const { id } = await run(createRoom())
+    history.push(routes.room(id))
   }
 
   return (

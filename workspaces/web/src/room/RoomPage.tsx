@@ -2,13 +2,13 @@ import React from "react"
 import AddTrackForm from "../track/AddTrackForm"
 import TrackList from "../track/TrackList"
 
-type Props = { slug: string }
+type Props = { id: string }
 
-function RoomPage({ slug }: Props) {
+function RoomPage({ id }: Props) {
   return (
     <main>
-      <AddTrackForm roomSlug={slug} />
-      <TrackList roomSlug={slug} />
+      <AddTrackForm roomId={id} />
+      <TrackList roomId={id} />
     </main>
   )
 }
