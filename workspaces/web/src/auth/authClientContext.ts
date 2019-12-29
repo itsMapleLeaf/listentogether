@@ -1,29 +1,19 @@
-import Auth0Client from "@auth0/auth0-spa-js/dist/typings/Auth0Client"
 import { useMemo } from "react"
-import { useHistory } from "react-router-dom"
 import createContextWrapper from "../common/createContextWrapper"
+import { firebase } from "../firebase"
 
-type UseAuthClientOptions = {
-  client: Auth0Client
-}
-
-function useAuthClient({ client }: UseAuthClientOptions) {
-  const history = useHistory()
+function useAuthClient() {
   return useMemo(
     () => ({
       login() {
-        client.loginWithRedirect({
-          appState: { path: history.location.pathname },
-        })
+        const provider = new firebase.auth.TwitterAuthProvider()
+        firebase.auth().signInWithPopup(provider)
       },
       logout() {
-        client.logout()
-      },
-      getToken(): Promise<string> {
-        return client.getTokenSilently()
+        firebase.auth().signOut()
       },
     }),
-    [client, history.location.pathname],
+    [],
   )
 }
 

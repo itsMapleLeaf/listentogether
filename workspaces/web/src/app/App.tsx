@@ -3,9 +3,9 @@ import { Route, Switch } from "react-router-dom"
 import { AuthClientProvider } from "../auth/authClientContext"
 import { AuthUserProvider } from "../auth/authUserContext"
 import { useAuth } from "../auth/useAuth"
+import RoomPage from "../room/RoomPage"
 import HomePage from "./HomePage"
 import LoginPage from "./LoginPage"
-import RoomPage from "../room/RoomPage"
 import { routes } from "./routes"
 
 function App() {
@@ -20,7 +20,7 @@ function App() {
 
     case "anonymous":
       return (
-        <AuthClientProvider client={state.client}>
+        <AuthClientProvider>
           <Switch>
             <Route exact path={routes.home}>
               <LoginPage />
@@ -34,7 +34,7 @@ function App() {
 
     case "authenticated":
       return (
-        <AuthClientProvider client={state.client}>
+        <AuthClientProvider>
           <AuthUserProvider user={state.user}>
             <Switch>
               <Route exact path={routes.home}>

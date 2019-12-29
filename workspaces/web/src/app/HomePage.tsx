@@ -20,7 +20,7 @@ function HomePage() {
 
   return (
     <main>
-      <p>hi, {user.name}! what would you like to do?</p>
+      <p>hi, {user.displayName}! what would you like to do?</p>
       <button disabled={loading} onClick={createRoom}>
         create room
       </button>
