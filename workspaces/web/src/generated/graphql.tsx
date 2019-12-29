@@ -55,20 +55,6 @@ export type Track = {
   youtubeUrl: Scalars['String'],
 };
 
-export type AddYouTubeTrackMutationVariables = {
-  roomSlug: Scalars['String'],
-  youtubeUrl: Scalars['String']
-};
-
-
-export type AddYouTubeTrackMutation = (
-  { __typename?: 'Mutation' }
-  & { addYouTubeTrack: (
-    { __typename?: 'AddYouTubeTrackResult' }
-    & Pick<AddYouTubeTrackResult, 'success'>
-  ) }
-);
-
 export type InitialRoomTracksQueryVariables = {
   slug: Scalars['String']
 };

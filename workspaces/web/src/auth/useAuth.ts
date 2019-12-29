@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { firebase } from "../firebase"
+import { firebaseApp } from "../firebase"
 
 type AuthState =
   | { type: "loading" }
@@ -21,7 +21,7 @@ export function useAuth() {
       setState({ type: "error", error: error.message })
     }
 
-    return firebase.auth().onAuthStateChanged(handleUser, handleError)
+    return firebaseApp.auth().onAuthStateChanged(handleUser, handleError)
   }, [])
 
   return state

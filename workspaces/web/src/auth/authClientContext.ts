@@ -1,16 +1,17 @@
+import firebase from "firebase"
 import { useMemo } from "react"
 import createContextWrapper from "../common/createContextWrapper"
-import { firebase } from "../firebase"
+import { firebaseApp } from "../firebase"
 
 function useAuthClient() {
   return useMemo(
     () => ({
       login() {
         const provider = new firebase.auth.TwitterAuthProvider()
-        firebase.auth().signInWithPopup(provider)
+        firebaseApp.auth().signInWithPopup(provider)
       },
       logout() {
-        firebase.auth().signOut()
+        firebaseApp.auth().signOut()
       },
     }),
     [],

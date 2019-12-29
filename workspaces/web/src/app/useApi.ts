@@ -23,7 +23,7 @@ export function useApi() {
 
     return {
       async createRoom(): Promise<{ slug: string }> {
-        return { slug: "test" }
+        return { slug: "human-readable-name" }
         // return fetchWithToken(`/api/rooms`, { method: "post" })
       },
     }

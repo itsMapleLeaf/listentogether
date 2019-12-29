@@ -1,44 +1,20 @@
-import { useMutation } from "@apollo/react-hooks"
-import gql from "graphql-tag"
 import React, { useState } from "react"
 import { extractErrorMessage } from "../common/extractErrorMessage"
-import {
-  AddYouTubeTrackMutation,
-  AddYouTubeTrackMutationVariables,
-} from "../generated/graphql"
+import { useRoomActions } from "../room/useRoomActions"
+import { useAsync } from "../state/useAsync"
 
 type Props = {
   roomSlug: string
 }
 
-const addYouTubeTrack = gql`
-  mutation AddYouTubeTrack($roomSlug: String!, $youtubeUrl: String!) {
-    addYouTubeTrack(roomSlug: $roomSlug, youtubeUrl: $youtubeUrl) {
-      success
-    }
-  }
-`
-
 function AddTrackForm({ roomSlug }: Props) {
   const [newTrackUrl, setNewTrackUrl] = useState("")
-
-  const [addTrack, { loading, error }] = useMutation<
-    AddYouTubeTrackMutation,
-    AddYouTubeTrackMutationVariables
-  >(addYouTubeTrack)
+  const [{ loading, error }, run] = useAsync()
+  const { addYoutubeTrack } = useRoomActions(roomSlug)
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
-
-    try {
-      await addTrack({
-        variables: {
-          roomSlug,
-          youtubeUrl: newTrackUrl,
-        },
-      })
-    } catch {}
-
+    await run(addYoutubeTrack(newTrackUrl))
     setNewTrackUrl("")
   }
 

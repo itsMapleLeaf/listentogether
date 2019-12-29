@@ -1,6 +1,6 @@
+import "firebase/analytics"
 import firebase from "firebase/app"
 import "firebase/auth"
-import "firebase/analytics"
 import "firebase/firestore"
 
 const config = {
@@ -14,7 +14,5 @@ const config = {
   measurementId: "G-BQFCMGHPDV",
 }
 
-firebase.initializeApp(config)
-firebase.analytics()
-
-export { firebase }
+export const firebaseApp = firebase.initializeApp(config)
+firebaseApp.analytics()
