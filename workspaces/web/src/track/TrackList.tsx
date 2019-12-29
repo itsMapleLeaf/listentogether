@@ -1,22 +1,12 @@
 import React, { useEffect, useState } from "react"
-import { firebaseApp } from "../firebase"
+import { watchTracks } from "../api"
 
 type Props = { roomSlug: string }
 
 function TrackList({ roomSlug }: Props) {
   const [tracks, setTracks] = useState()
 
-  useEffect(() => {
-    return firebaseApp
-      .firestore()
-      .collection("rooms")
-      .where("slug", "==", roomSlug)
-      .onSnapshot((snap) => {
-        snap.docs[0].ref.collection("tracks").onSnapshot((snap) => {
-          setTracks(snap.docs.map((doc) => ({ id: doc.id, ...doc.data() })))
-        })
-      })
-  }, [roomSlug])
+  useEffect(() => watchTracks(roomSlug, setTracks), [roomSlug])
 
   return (
     <>

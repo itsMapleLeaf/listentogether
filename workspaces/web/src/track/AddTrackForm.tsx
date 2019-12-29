@@ -1,6 +1,6 @@
 import React, { useState } from "react"
+import { addYoutubeTrack } from "../api"
 import { extractErrorMessage } from "../common/extractErrorMessage"
-import { useRoomActions } from "../room/useRoomActions"
 import { useAsync } from "../state/useAsync"
 
 type Props = {
@@ -10,11 +10,10 @@ type Props = {
 function AddTrackForm({ roomSlug }: Props) {
   const [newTrackUrl, setNewTrackUrl] = useState("")
   const [{ loading, error }, run] = useAsync()
-  const { addYoutubeTrack } = useRoomActions(roomSlug)
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
-    await run(addYoutubeTrack(newTrackUrl))
+    await run(addYoutubeTrack(roomSlug, newTrackUrl))
     setNewTrackUrl("")
   }
 
