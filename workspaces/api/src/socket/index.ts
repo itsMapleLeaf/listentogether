@@ -53,15 +53,9 @@ const handleClientMessage = (client: Client) =>
       })
     },
 
-    clientJoinRoom({ slug }) {
+    async clientJoinRoom({ slug }) {
       client.roomSlug = slug
-    },
-
-    async clientRequestTracks() {
-      const { roomSlug } = client
-      if (!roomSlug) return
-
-      client.send(await createUpdateTracksMessage(roomSlug))
+      client.send(await createUpdateTracksMessage(slug))
     },
 
     async clientAddTrack({ youtubeUrl }) {

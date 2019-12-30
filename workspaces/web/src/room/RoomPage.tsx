@@ -15,11 +15,7 @@ function RoomPage(props: Props) {
     props.socketStore,
   ])
 
-  useEffect(() => {
-    store.joinRoom(props.slug)
-    store.requestTracks()
-  }, [store, props.slug])
-
+  useEffect(() => store.joinRoom(props.slug), [store, props.slug])
   useEffect(() => store.addSocketListener(), [store])
 
   return (

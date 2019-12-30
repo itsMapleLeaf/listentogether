@@ -5,7 +5,6 @@ export type SocketMessageMap = {
   // messages from client
   clientCreateRoom: undefined
   clientJoinRoom: { slug: string }
-  clientRequestTracks: undefined
   clientAddTrack: { youtubeUrl: string }
 
   // messages from server

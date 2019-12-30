@@ -13,10 +13,6 @@ export class RoomStore {
     this.socket.send({ type: "clientJoinRoom", params: { slug } })
   }
 
-  requestTracks = () => {
-    this.socket.send({ type: "clientRequestTracks" })
-  }
-
   addYoutubeTrack = (url: string) => {
     this.socket.send({ type: "clientAddTrack", params: { youtubeUrl: url } })
   }
