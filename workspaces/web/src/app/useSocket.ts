@@ -25,7 +25,10 @@ export function useSocket() {
         setTimeout(connect, 1000)
       }
 
-      socket.onerror = () => {}
+      socket.onerror = () => {
+        setState({ type: "reconnecting" })
+        setTimeout(connect, 1000)
+      }
 
       socket.onmessage = () => {}
     }
