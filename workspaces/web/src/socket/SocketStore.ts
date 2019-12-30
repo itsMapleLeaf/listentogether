@@ -21,13 +21,13 @@ export class SocketStore {
     socket.onclose = () => {
       this.connectionState = "reconnecting"
       removeSocketListeners()
-      setTimeout(this.openConnection, 1000)
+      setTimeout(this.openConnection, 3000)
     }
 
     socket.onerror = () => {
       this.connectionState = "reconnecting"
       removeSocketListeners()
-      setTimeout(this.openConnection, 1000)
+      setTimeout(this.openConnection, 3000)
     }
 
     const removeSocketListeners = () => {
