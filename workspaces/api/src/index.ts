@@ -1,21 +1,25 @@
 import compression from 'compression'
 import cors from 'cors'
-import { GraphQLServer } from 'graphql-yoga'
-import { checkJwt } from './auth'
-import { createRoomHandler } from './room'
-import { schema } from './schema'
+import express from 'express'
+import http from 'http'
+import WebSocket from 'ws'
 
-async function startHttpServer() {
-  const server = new GraphQLServer({ schema })
+const app = express()
+app.use(cors({ origin: 'http://localhost:3000' }))
+app.use(compression())
 
-  server.express.use(cors({ origin: 'http://localhost:3000' }))
-  server.express.use(compression())
+const httpServer = new http.Server(app)
 
-  server.express.post('/api/rooms', checkJwt, createRoomHandler)
+const socketServer = new WebSocket.Server({
+  server: httpServer,
+  path: '/api/socket',
+})
 
-  const port = Number(process.env.PORT) || 4000
-  await server.start({ port, subscriptions: { path: '/subscriptions' } })
+socketServer.on('connection', (client, request) => {
+  console.info(`connected: ${request.connection.remoteAddress}`)
+})
+
+const port = Number(process.env.PORT) || 4000
+httpServer.listen(port, () => {
   console.log(`API listening on http://localhost:${port}`)
-}
-
-startHttpServer().catch(console.error)
+})

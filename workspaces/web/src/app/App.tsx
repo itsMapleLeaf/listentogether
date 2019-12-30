@@ -1,53 +1,62 @@
-import React from "react"
-import { Route, Switch } from "react-router-dom"
-import { AuthClientProvider } from "../auth/authClientContext"
-import { AuthUserProvider } from "../auth/authUserContext"
-import { useAuth } from "../auth/useAuth"
-import HomePage from "./HomePage"
-import LoginPage from "./LoginPage"
-import RoomPage from "../room/RoomPage"
-import { routes } from "./routes"
+import React, { useEffect, useState } from "react"
+
+const socketUrl = `ws://localhost:4000/api/socket`
+
+type SocketState =
+  | { type: "connecting" }
+  | { type: "online" }
+  | { type: "reconnecting" }
+
+function useSocket() {
+  const [state, setState] = useState<SocketState>({ type: "connecting" })
+
+  useEffect(() => {
+    let socket: WebSocket | undefined
+
+    function connect() {
+      socket = new WebSocket(socketUrl)
+
+      socket.onopen = () => {
+        setState({ type: "online" })
+      }
+
+      socket.onclose = () => {
+        setState({ type: "reconnecting" })
+        setTimeout(connect, 1000)
+      }
+
+      socket.onerror = () => {}
+
+      socket.onmessage = () => {}
+    }
+
+    connect()
+
+    return () => {
+      if (!socket) return
+      socket.onopen = null
+      socket.onclose = null
+      socket.onerror = null
+      socket.onmessage = null
+      socket.close()
+    }
+  }, [])
+
+  return state
+}
 
 function App() {
-  const state = useAuth()
+  const state = useSocket()
 
   switch (state.type) {
-    case "loading":
-      return <p>loading...</p>
+    case "connecting":
+      return <p>connecting...</p>
 
-    case "error":
-      return <p>oops! an error occurred: {state.error}</p>
+    case "online":
+      return <p>online!</p>
 
-    case "anonymous":
-      return (
-        <AuthClientProvider client={state.client}>
-          <Switch>
-            <Route exact path={routes.home}>
-              <LoginPage />
-            </Route>
-            <Route path={routes.room(":slug")}>
-              <LoginPage />
-            </Route>
-          </Switch>
-        </AuthClientProvider>
-      )
-
-    case "authenticated":
-      return (
-        <AuthClientProvider client={state.client}>
-          <AuthUserProvider user={state.user}>
-            <Switch>
-              <Route exact path={routes.home}>
-                <HomePage />
-              </Route>
-              <Route
-                path={routes.room(":slug")}
-                render={({ match }) => <RoomPage slug={match.params.slug} />}
-              />
-            </Switch>
-          </AuthUserProvider>
-        </AuthClientProvider>
-      )
+    case "reconnecting":
+      return <p>lost connection, reconnecting...</p>
   }
 }
 
