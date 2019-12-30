@@ -1,68 +1,72 @@
-import { useEffect, useRef, useState } from "react"
+import {
+  deserializeMessage,
+  serializeMessage,
+  SocketMessage,
+} from "@listen-together/shared"
+import { useEffect, useMemo, useRef, useState } from "react"
+
+type SocketStatus = "connecting" | "online" | "reconnecting"
 
 const socketUrl = `ws://localhost:4000/api/socket`
 
-type SocketState =
-  | { type: "connecting" }
-  | { type: "online" }
-  | { type: "reconnecting" }
-
-export function useSocket(onMessage: (message: any) => void) {
-  const [state, setState] = useState<SocketState>({ type: "connecting" })
+export function useSocket() {
+  const [status, setStatus] = useState<SocketStatus>("connecting")
   const socketRef = useRef<WebSocket>()
-  const onMessageRef = useRef(onMessage)
 
   useEffect(() => {
-    onMessageRef.current = onMessage
-  })
-
-  function sendCommand(command: object) {
-    socketRef.current?.send(JSON.stringify(command))
-  }
-
-  useEffect(() => {
-    let socket: WebSocket | undefined
-
-    function connect() {
-      socket = socketRef.current = new WebSocket(socketUrl)
+    const openConnection = () => {
+      const socket = (socketRef.current = new WebSocket(socketUrl))
 
       socket.onopen = () => {
-        setState({ type: "online" })
+        setStatus("online")
       }
 
       socket.onclose = () => {
-        setState({ type: "reconnecting" })
-        removeHandlers()
-        setTimeout(connect, 1000)
+        setStatus("reconnecting")
+        removeSocketListeners()
+        setTimeout(openConnection, 3000)
       }
 
       socket.onerror = () => {
-        setState({ type: "reconnecting" })
-        removeHandlers()
-        setTimeout(connect, 1000)
-      }
-
-      socket.onmessage = ({ data }) => {
-        const message = JSON.parse(String(data))
-        onMessageRef.current(message)
+        setStatus("reconnecting")
+        removeSocketListeners()
+        setTimeout(openConnection, 3000)
       }
     }
 
-    function removeHandlers() {
-      if (!socket) return
-      socket.onopen = null
-      socket.onclose = null
-      socket.onerror = null
-      socket.onmessage = null
+    const removeSocketListeners = () => {
+      if (!socketRef.current) return
+      socketRef.current.onopen = null
+      socketRef.current.onclose = null
+      socketRef.current.onerror = null
+      socketRef.current.onmessage = null
     }
 
-    connect()
+    openConnection()
 
     return () => {
-      removeHandlers()
-      socket?.close()
+      removeSocketListeners()
+      socketRef.current?.close()
     }
   }, [])
 
-  return [state, sendCommand] as const
+  const state = useMemo(() => ({ status }), [status])
+
+  const actions = useMemo(() => {
+    const listen = (handleMessage: (message: SocketMessage) => void) => {
+      const listener = ({ data }: MessageEvent) =>
+        handleMessage(deserializeMessage(data))
+
+      socketRef.current?.addEventListener("message", listener)
+      socketRef.current?.removeEventListener("message", listener)
+    }
+
+    const send = (message: SocketMessage) => {
+      socketRef.current?.send(serializeMessage(message))
+    }
+
+    return { listen, send }
+  }, [])
+
+  return [state, actions]
 }

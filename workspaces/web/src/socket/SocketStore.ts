@@ -35,15 +35,16 @@ export class SocketStore {
     }
 
     const removeSocketListeners = () => {
-      socket.onopen = null
-      socket.onclose = null
-      socket.onerror = null
-      socket.onmessage = null
+      if (!this.socket) return
+      this.socket.onopen = null
+      this.socket.onclose = null
+      this.socket.onerror = null
+      this.socket.onmessage = null
     }
 
     return () => {
       removeSocketListeners()
-      socket.close()
+      this.socket?.close()
     }
   }
 
