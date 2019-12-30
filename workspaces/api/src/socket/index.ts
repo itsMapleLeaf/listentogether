@@ -85,6 +85,8 @@ function createUpdateTracksMessage(
   }
 }
 
+// clients might have disconnected even without a close event
+// https://github.com/websockets/ws#how-to-detect-and-close-broken-connections
 function checkDeadClients() {
   for (const [id, client] of clients) {
     if (!client.isAlive) {
