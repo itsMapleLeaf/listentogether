@@ -1,6 +1,5 @@
 import { createBrowserHistory } from "history"
 import { autorun, observable } from "mobx"
-import { match, MatchResult } from "path-to-regexp"
 import { createRouter } from "../common/createRouter"
 import { createMessageHandler } from "../socket/createMessageHandler"
 
@@ -90,15 +89,5 @@ export class AppStore {
     this.socket.onclose = null
     this.socket.onerror = null
     this.socket.onmessage = null
-  }
-}
-
-function routeMatch<P extends object>(
-  path: string,
-  runWithResult: (match: MatchResult<P>) => void,
-) {
-  const matchResult = match<P>(path)(history.location.pathname)
-  if (matchResult) {
-    runWithResult(matchResult)
   }
 }
