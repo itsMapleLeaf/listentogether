@@ -1,4 +1,8 @@
-import { SocketMessage } from "@listen-together/shared"
+import {
+  deserializeMessage,
+  serializeMessage,
+  SocketMessage,
+} from "@listen-together/shared"
 import { observable } from "mobx"
 
 type ConnectionState = "connecting" | "online" | "reconnecting"
@@ -45,13 +49,13 @@ export class SocketStore {
 
   listen = (handleMessage: (message: SocketMessage) => void) => {
     const listener = ({ data }: MessageEvent) =>
-      handleMessage(JSON.parse(String(data)))
+      handleMessage(deserializeMessage(data))
 
     this.socket?.addEventListener("message", listener)
     return () => this.socket?.removeEventListener("message", listener)
   }
 
   send = (message: SocketMessage) => {
-    this.socket?.send(JSON.stringify(message))
+    this.socket?.send(serializeMessage(message))
   }
 }

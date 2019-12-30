@@ -33,3 +33,11 @@ export function createMessageHandler(handlers: HandlerMap) {
     await handlers[message.type]?.(message.params as never) // lol
   }
 }
+
+export function serializeMessage(message: SocketMessage) {
+  return JSON.stringify(message)
+}
+
+export function deserializeMessage(data: unknown) {
+  return JSON.parse(String(data))
+}

@@ -1,4 +1,8 @@
-import { createMessageHandler, SocketMessage } from "@listen-together/shared"
+import {
+  createMessageHandler,
+  deserializeMessage,
+  SocketMessage,
+} from "@listen-together/shared"
 import http from "http"
 import WebSocket from "ws"
 import { photon } from "../photon"
@@ -30,7 +34,7 @@ function handleClientConnection(
   clients.set(client.id, client)
 
   clientSocket.on("message", (data) => {
-    const message = JSON.parse(String(data))
+    const message = deserializeMessage(data)
     console.log(message)
     handleClientMessage(client)(message)
   })

@@ -1,4 +1,4 @@
-import { SocketMessage } from "@listen-together/shared"
+import { serializeMessage, SocketMessage } from "@listen-together/shared"
 import WebSocket from "ws"
 
 export class Client {
@@ -9,7 +9,7 @@ export class Client {
   constructor(private readonly socket: WebSocket) {}
 
   send(message: SocketMessage) {
-    this.socket.send(JSON.stringify(message))
+    this.socket.send(serializeMessage(message))
   }
 
   ping() {
