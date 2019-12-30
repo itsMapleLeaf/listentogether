@@ -1,4 +1,5 @@
-import { SocketMessage } from "@listen-together/shared"
+import { createMessageHandler, SocketMessage } from "@listen-together/shared"
+import { Track as DatabaseTrack } from "@prisma/photon"
 import http from "http"
 import WebSocket from "ws"
 import { photon } from "../photon"
@@ -26,20 +27,17 @@ function handleClientConnection(
   clientSocket.on("message", (data) => {
     const message = JSON.parse(String(data))
     console.log(message)
-    handleClientMessage(message, client)
+    handleClientMessage(client)(message)
   })
 
   clientSocket.on("close", () => {
     console.info(`closed: ${clientAddress}`)
+    clients.delete(client.id)
   })
 }
 
-async function handleClientMessage(message: any, client: Client) {
-  type HandlerMap = {
-    [_ in string]?: (params: any) => void | Promise<void>
-  }
-
-  const handlers: HandlerMap = {
+const handleClientMessage = (client: Client) =>
+  createMessageHandler({
     async clientCreateRoom() {
       const room = await getOrCreateRoom(client.id)
       client.send({
@@ -53,16 +51,7 @@ async function handleClientMessage(message: any, client: Client) {
         .findOne({ where: { slug: roomSlug } })
         .tracks()
 
-      client.send({
-        type: "serverUpdateTracks",
-        params: {
-          roomSlug,
-          tracks: tracks.map((track) => ({
-            ...track,
-            youtubeUrl: track.youtubeUrl || "",
-          })),
-        },
-      })
+      client.send(createUpdateTracksMessage(roomSlug, tracks))
     },
 
     async clientAddTrack({ roomSlug, youtubeUrl }) {
@@ -72,20 +61,24 @@ async function handleClientMessage(message: any, client: Client) {
         .findOne({ where: { slug: roomSlug } })
         .tracks()
 
-      broadcast({
-        type: "serverUpdateTracks",
-        params: {
-          roomSlug,
-          tracks: tracks.map((track) => ({
-            ...track,
-            youtubeUrl: track.youtubeUrl || "",
-          })),
-        },
-      })
+      broadcast(createUpdateTracksMessage(roomSlug, tracks))
+    },
+  })
+
+function createUpdateTracksMessage(
+  roomSlug: any,
+  tracks: DatabaseTrack[],
+): SocketMessage {
+  return {
+    type: "serverUpdateTracks",
+    params: {
+      roomSlug,
+      tracks: tracks.map((track) => ({
+        ...track,
+        youtubeUrl: track.youtubeUrl || "",
+      })),
     },
   }
-
-  await handlers[message.type]?.(message.params)
 }
 
 export function createSocketServer(httpServer: http.Server) {
