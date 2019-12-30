@@ -4,6 +4,7 @@ import WebSocket from "ws"
 export class Client {
   readonly id = Math.random().toString()
   isAlive = true
+  roomSlug?: string
 
   constructor(private readonly socket: WebSocket) {}
 

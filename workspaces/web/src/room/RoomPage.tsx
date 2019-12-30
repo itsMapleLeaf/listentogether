@@ -11,12 +11,15 @@ type Props = {
 }
 
 function RoomPage(props: Props) {
-  const store = useMemo(() => new RoomStore(props.slug, props.socketStore), [
-    props.slug,
+  const store = useMemo(() => new RoomStore(props.socketStore), [
     props.socketStore,
   ])
 
-  useEffect(() => store.requestTracks(), [store])
+  useEffect(() => {
+    store.joinRoom(props.slug)
+    store.requestTracks()
+  }, [store, props.slug])
+
   useEffect(() => store.addSocketListener(), [store])
 
   return (

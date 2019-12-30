@@ -49,9 +49,9 @@ export class AppStore {
   }
 
   private handleMessage = createMessageHandler({
-    serverRoomCreated: async ({ roomSlug }) => {
+    serverRoomCreated: async ({ slug }) => {
       if (this.view.type === "lobby") {
-        this.view = { type: "room", slug: roomSlug }
+        this.view = { type: "room", slug }
       }
     },
   })

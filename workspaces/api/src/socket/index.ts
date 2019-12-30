@@ -1,5 +1,4 @@
 import { createMessageHandler, SocketMessage } from "@listen-together/shared"
-import { Track as DatabaseTrack } from "@prisma/photon"
 import http from "http"
 import WebSocket from "ws"
 import { photon } from "../photon"
@@ -11,6 +10,12 @@ const clients = new Map<string, Client>()
 function broadcast(message: SocketMessage) {
   for (const [, client] of clients) {
     client.send(message)
+  }
+}
+
+function broadcastToRoom(slug: string, message: SocketMessage) {
+  for (const [, client] of clients) {
+    if (client.roomSlug === slug) client.send(message)
   }
 }
 
@@ -43,40 +48,43 @@ function handleClientConnection(
 const handleClientMessage = (client: Client) =>
   createMessageHandler({
     async clientCreateRoom() {
-      const room = await getOrCreateRoom(client.id)
+      const { slug } = await getOrCreateRoom(client.id)
       client.send({
         type: "serverRoomCreated",
-        params: { roomSlug: room.slug },
+        params: { slug },
       })
     },
 
-    async clientRequestTracks({ roomSlug }) {
-      const tracks = await photon.rooms
-        .findOne({ where: { slug: roomSlug } })
-        .tracks()
-
-      client.send(createUpdateTracksMessage(roomSlug, tracks))
+    clientJoinRoom({ slug }) {
+      client.roomSlug = slug
     },
 
-    async clientAddTrack({ roomSlug, youtubeUrl }) {
+    async clientRequestTracks() {
+      const { roomSlug } = client
+      if (!roomSlug) return
+
+      client.send(await createUpdateTracksMessage(roomSlug))
+    },
+
+    async clientAddTrack({ youtubeUrl }) {
+      const { roomSlug } = client
+      if (!roomSlug) return
+
       await addYouTubeTrackToRoom(roomSlug, youtubeUrl)
-
-      const tracks = await photon.rooms
-        .findOne({ where: { slug: roomSlug } })
-        .tracks()
-
-      broadcast(createUpdateTracksMessage(roomSlug, tracks))
+      broadcastToRoom(roomSlug, await createUpdateTracksMessage(roomSlug))
     },
   })
 
-function createUpdateTracksMessage(
+async function createUpdateTracksMessage(
   roomSlug: string,
-  tracks: DatabaseTrack[],
-): SocketMessage {
+): Promise<SocketMessage> {
+  const tracks = await photon.rooms
+    .findOne({ where: { slug: roomSlug } })
+    .tracks()
+
   return {
     type: "serverUpdateTracks",
     params: {
-      roomSlug,
       tracks: tracks.map((track) => ({
         ...track,
         youtubeUrl: track.youtubeUrl || "",

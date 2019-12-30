@@ -4,12 +4,14 @@ import { ValueOf } from "./types"
 export type SocketMessageMap = {
   // messages from client
   clientCreateRoom: undefined
-  clientRequestTracks: { roomSlug: string }
-  clientAddTrack: { roomSlug: string; youtubeUrl: string }
+  clientJoinRoom: { slug: string }
+  clientRequestTracks: undefined
+  clientAddTrack: { youtubeUrl: string }
 
   // messages from server
-  serverRoomCreated: { roomSlug: string }
-  serverUpdateTracks: { roomSlug: string; tracks: Track[] }
+  serverRoomCreated: { slug: string }
+  // serverRoomJoined: { slug: string } // maybe not needed?
+  serverUpdateTracks: { tracks: Track[] }
 }
 
 type MessageType<T, P> = P extends undefined

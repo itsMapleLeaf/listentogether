@@ -7,10 +7,19 @@ export class RoomStore {
   @observable
   tracks: Track[] = []
 
-  constructor(
-    private readonly roomSlug: string,
-    private readonly socket: SocketStore,
-  ) {}
+  constructor(private readonly socket: SocketStore) {}
+
+  joinRoom = (slug: string) => {
+    this.socket.send({ type: "clientJoinRoom", params: { slug } })
+  }
+
+  requestTracks = () => {
+    this.socket.send({ type: "clientRequestTracks" })
+  }
+
+  addYoutubeTrack = (url: string) => {
+    this.socket.send({ type: "clientAddTrack", params: { youtubeUrl: url } })
+  }
 
   addSocketListener = () =>
     this.socket.listen(
@@ -20,18 +29,4 @@ export class RoomStore {
         },
       }),
     )
-
-  requestTracks = () => {
-    this.socket.send({
-      type: "clientRequestTracks",
-      params: { roomSlug: this.roomSlug },
-    })
-  }
-
-  addYoutubeTrack = (url: string) => {
-    this.socket.send({
-      type: "clientAddTrack",
-      params: { roomSlug: this.roomSlug, youtubeUrl: url },
-    })
-  }
 }
