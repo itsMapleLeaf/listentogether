@@ -1,0 +1,17 @@
+{
+  "name": "@listen-together/shared",
+  "description": "",
+  "authors": "kingdaro",
+  "version": "1.0.0",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "license": "MIT",
+  "scripts": {
+    "dev": "tsc --watch",
+    "build": "tsc"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "~3.7.4"
+  }
+}
