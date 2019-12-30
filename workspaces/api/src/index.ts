@@ -3,6 +3,57 @@ import cors from "cors"
 import express from "express"
 import http from "http"
 import WebSocket from "ws"
+import { getOrCreateRoom } from "./room"
+
+class Client {
+  readonly id = Math.random().toString()
+
+  constructor(private readonly socket: WebSocket) {}
+
+  send(command: object) {
+    this.socket.send(JSON.stringify(command))
+  }
+}
+
+const clients = new Map<string, Client>()
+
+function handleClientConnection(
+  clientSocket: WebSocket,
+  request: http.IncomingMessage,
+) {
+  const clientAddress = request.connection.remoteAddress
+  console.info(`connected: ${clientAddress}`)
+
+  const client = new Client(clientSocket)
+  clients.set(client.id, client)
+
+  clientSocket.on("message", (data) => {
+    const message = JSON.parse(String(data))
+    handleClientMessage(message, client)
+  })
+
+  clientSocket.on("close", () => {
+    console.info(`closed: ${clientAddress}`)
+  })
+}
+
+async function handleClientMessage(message: any, client: Client) {
+  type HandlerMap = {
+    [_ in string]?: (params: any) => void | Promise<void>
+  }
+
+  const handlers: HandlerMap = {
+    async clientCreateRoom() {
+      const room = await getOrCreateRoom(client.id)
+      client.send({
+        type: "serverRoomCreated",
+        params: { roomSlug: room.slug },
+      })
+    },
+  }
+
+  await handlers[message.type]?.(message.params)
+}
 
 const app = express()
 app.use(cors({ origin: "http://localhost:3000" }))
@@ -15,9 +66,7 @@ const socketServer = new WebSocket.Server({
   path: "/api/socket",
 })
 
-socketServer.on("connection", (client, request) => {
-  console.info(`connected: ${request.connection.remoteAddress}`)
-})
+socketServer.on("connection", handleClientConnection)
 
 const port = Number(process.env.PORT) || 4000
 httpServer.listen(port, () => {
