@@ -37,6 +37,6 @@ export function serializeMessage(message: SocketMessage) {
   return JSON.stringify(message)
 }
 
-export function deserializeMessage(data: unknown) {
+export function deserializeMessage(data: unknown): SocketMessage {
   return JSON.parse(String(data))
 }
