@@ -1,11 +1,14 @@
 import { observer } from "mobx-react-lite"
-import React from "react"
+import React, { useEffect, useMemo } from "react"
 import RoomPage from "../room/RoomPage"
-import { useAppStore } from "./appStoreContext"
+import { AppStore } from "./AppStore"
 import LobbyPage from "./LobbyPage"
 
 function App() {
-  const store = useAppStore()
+  const store = useMemo(() => new AppStore(), [])
+
+  useEffect(() => store.openSocketConnection(), [store])
+  useEffect(() => store.initRouting(), [store])
 
   switch (store.connectionState) {
     case "connecting":

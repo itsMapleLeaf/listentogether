@@ -28,16 +28,21 @@ export class AppStore {
 
     this.view = router.run(history.location.pathname) ?? { type: "lobby" }
 
-    history.listen((location) => {
+    const unlistenHistory = history.listen((location) => {
       this.view = router.run(location.pathname) ?? { type: "lobby" }
     })
 
-    autorun(() => {
+    const cleanupAutorun = autorun(() => {
       const path = this.view.type === "lobby" ? "/" : `/room/${this.view.slug}`
       if (path !== history.location.pathname) {
         history.push(path)
       }
     })
+
+    return () => {
+      unlistenHistory()
+      cleanupAutorun()
+    }
   }
 
   openSocketConnection = () => {
@@ -49,19 +54,31 @@ export class AppStore {
 
     socket.onclose = () => {
       this.connectionState = "reconnecting"
-      this.removeHandlers()
+      removeSocketListeners()
       setTimeout(this.openSocketConnection, 1000)
     }
 
     socket.onerror = () => {
       this.connectionState = "reconnecting"
-      this.removeHandlers()
+      removeSocketListeners()
       setTimeout(this.openSocketConnection, 1000)
     }
 
     socket.onmessage = ({ data }) => {
       const message = JSON.parse(String(data))
       this.handleMessage(message)
+    }
+
+    const removeSocketListeners = () => {
+      socket.onopen = null
+      socket.onclose = null
+      socket.onerror = null
+      socket.onmessage = null
+    }
+
+    return () => {
+      removeSocketListeners()
+      socket.close()
     }
   }
 
@@ -82,12 +99,4 @@ export class AppStore {
       }
     },
   })
-
-  private removeHandlers = () => {
-    if (!this.socket) return
-    this.socket.onopen = null
-    this.socket.onclose = null
-    this.socket.onerror = null
-    this.socket.onmessage = null
-  }
 }
