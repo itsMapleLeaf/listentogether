@@ -5,7 +5,8 @@ import { AppStore } from "./app/AppStore"
 import { AppStoreProvider } from "./app/appStoreContext"
 
 const store = new AppStore()
-store.connect()
+store.initRouting()
+store.openSocketConnection()
 
 ReactDOM.render(
   <AppStoreProvider store={store}>
