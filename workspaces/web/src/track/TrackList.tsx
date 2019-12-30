@@ -1,24 +1,17 @@
 import React from "react"
-import { extractErrorMessage } from "../common/extractErrorMessage"
+import { Track } from "./types"
 
-type Props = { roomSlug: string }
+type Props = { tracks: Track[] }
 
-function TrackList({ roomSlug }: Props) {
-  const loading = false
-  const error = undefined
-  const tracks: any[] = []
+function TrackList(props: Props) {
   return (
     <>
       <h2>track list</h2>
-      {loading && <p>loading...</p>}
-      {error && <p>an error occurred: {extractErrorMessage(error)}</p>}
-      {tracks && (
-        <ul>
-          {tracks.map((track) => (
-            <li key={track.id}>{track.youtubeUrl}</li>
-          ))}
-        </ul>
-      )}
+      <ul>
+        {props.tracks.map((track) => (
+          <li key={track.id}>{track.youtubeUrl}</li>
+        ))}
+      </ul>
     </>
   )
 }

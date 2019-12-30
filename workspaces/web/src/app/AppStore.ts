@@ -2,22 +2,19 @@ import { createBrowserHistory } from "history"
 import { autorun, observable } from "mobx"
 import { createRouter } from "../common/createRouter"
 import { createMessageHandler } from "../socket/createMessageHandler"
-
-type ConnectionState = "connecting" | "online" | "reconnecting"
+import { SocketStore } from "../socket/SocketStore"
 
 type AppView = { type: "lobby" } | { type: "room"; slug: string }
 
-const socketUrl = `ws://localhost:4000/api/socket`
 const history = createBrowserHistory()
 
 export class AppStore {
   @observable
-  connectionState: ConnectionState = "connecting"
-
-  @observable
   view: AppView = { type: "lobby" }
 
-  private socket?: WebSocket
+  constructor(private socket: SocketStore) {}
+
+  addSocketListener = () => this.socket.listen(this.handleMessage)
 
   // TODO: find a better system for this
   initRouting = () => {
@@ -45,51 +42,10 @@ export class AppStore {
     }
   }
 
-  openSocketConnection = () => {
-    const socket = (this.socket = new WebSocket(socketUrl))
-
-    socket.onopen = () => {
-      this.connectionState = "online"
-    }
-
-    socket.onclose = () => {
-      this.connectionState = "reconnecting"
-      removeSocketListeners()
-      setTimeout(this.openSocketConnection, 1000)
-    }
-
-    socket.onerror = () => {
-      this.connectionState = "reconnecting"
-      removeSocketListeners()
-      setTimeout(this.openSocketConnection, 1000)
-    }
-
-    socket.onmessage = ({ data }) => {
-      const message = JSON.parse(String(data))
-      this.handleMessage(message)
-    }
-
-    const removeSocketListeners = () => {
-      socket.onopen = null
-      socket.onclose = null
-      socket.onerror = null
-      socket.onmessage = null
-    }
-
-    return () => {
-      removeSocketListeners()
-      socket.close()
-    }
-  }
-
   createRoom = () => {
     if (this.view.type === "lobby") {
-      this.sendMessage({ type: "clientCreateRoom" })
+      this.socket.send({ type: "clientCreateRoom" })
     }
-  }
-
-  private sendMessage = (message: { type: string; params?: any }) => {
-    this.socket?.send(JSON.stringify(message))
   }
 
   private handleMessage = createMessageHandler({

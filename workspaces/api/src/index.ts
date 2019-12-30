@@ -3,19 +3,26 @@ import cors from "cors"
 import express from "express"
 import http from "http"
 import WebSocket from "ws"
-import { getOrCreateRoom } from "./room"
+import { photon } from "./photon"
+import { addYouTubeTrackToRoom, getOrCreateRoom } from "./room"
 
 class Client {
   readonly id = Math.random().toString()
 
   constructor(private readonly socket: WebSocket) {}
 
-  send(command: object) {
-    this.socket.send(JSON.stringify(command))
+  send(message: { type: string; params?: object }) {
+    this.socket.send(JSON.stringify(message))
   }
 }
 
 const clients = new Map<string, Client>()
+
+function broadcast(message: { type: string; params?: object }) {
+  for (const [, client] of clients) {
+    client.send(message)
+  }
+}
 
 function handleClientConnection(
   clientSocket: WebSocket,
@@ -29,6 +36,7 @@ function handleClientConnection(
 
   clientSocket.on("message", (data) => {
     const message = JSON.parse(String(data))
+    console.log(message)
     handleClientMessage(message, client)
   })
 
@@ -48,6 +56,30 @@ async function handleClientMessage(message: any, client: Client) {
       client.send({
         type: "serverRoomCreated",
         params: { roomSlug: room.slug },
+      })
+    },
+
+    async clientRequestTracks({ roomSlug }) {
+      const tracks = await photon.rooms
+        .findOne({ where: { slug: roomSlug } })
+        .tracks()
+
+      client.send({
+        type: "serverUpdateTracks",
+        params: { tracks },
+      })
+    },
+
+    async clientAddTrack({ roomSlug, youtubeUrl }) {
+      await addYouTubeTrackToRoom(roomSlug, youtubeUrl)
+
+      const tracks = await photon.rooms
+        .findOne({ where: { slug: roomSlug } })
+        .tracks()
+
+      broadcast({
+        type: "serverUpdateTracks",
+        params: { tracks },
       })
     },
   }

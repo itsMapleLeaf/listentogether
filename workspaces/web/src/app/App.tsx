@@ -1,16 +1,19 @@
 import { observer } from "mobx-react-lite"
 import React, { useEffect, useMemo } from "react"
 import RoomPage from "../room/RoomPage"
+import { SocketStore } from "../socket/SocketStore"
 import { AppStore } from "./AppStore"
 import LobbyPage from "./LobbyPage"
 
 function App() {
-  const store = useMemo(() => new AppStore(), [])
+  const socketStore = useMemo(() => new SocketStore(), [])
+  const appStore = useMemo(() => new AppStore(socketStore), [socketStore])
 
-  useEffect(() => store.openSocketConnection(), [store])
-  useEffect(() => store.initRouting(), [store])
+  useEffect(() => socketStore.openConnection(), [socketStore])
+  useEffect(() => appStore.addSocketListener(), [appStore])
+  useEffect(() => appStore.initRouting(), [appStore])
 
-  switch (store.connectionState) {
+  switch (socketStore.connectionState) {
     case "connecting":
       return <p>connecting...</p>
 
@@ -18,12 +21,16 @@ function App() {
       return <p>lost connection, reconnecting...</p>
 
     case "online":
-      switch (store.view.type) {
+      switch (appStore.view.type) {
         case "lobby":
-          return <LobbyPage onCreateRoom={store.createRoom} disabled={false} />
+          return (
+            <LobbyPage onCreateRoom={appStore.createRoom} disabled={false} />
+          )
 
         case "room":
-          return <RoomPage slug={store.view.slug} />
+          return (
+            <RoomPage slug={appStore.view.slug} socketStore={socketStore} />
+          )
       }
   }
 }
