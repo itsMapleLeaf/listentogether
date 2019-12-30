@@ -1,21 +1,21 @@
-import compression from 'compression'
-import cors from 'cors'
-import express from 'express'
-import http from 'http'
-import WebSocket from 'ws'
+import compression from "compression"
+import cors from "cors"
+import express from "express"
+import http from "http"
+import WebSocket from "ws"
 
 const app = express()
-app.use(cors({ origin: 'http://localhost:3000' }))
+app.use(cors({ origin: "http://localhost:3000" }))
 app.use(compression())
 
 const httpServer = new http.Server(app)
 
 const socketServer = new WebSocket.Server({
   server: httpServer,
-  path: '/api/socket',
+  path: "/api/socket",
 })
 
-socketServer.on('connection', (client, request) => {
+socketServer.on("connection", (client, request) => {
   console.info(`connected: ${request.connection.remoteAddress}`)
 })
 

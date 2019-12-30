@@ -1,42 +1,18 @@
-import { useMutation } from "@apollo/react-hooks"
-import gql from "graphql-tag"
 import React, { useState } from "react"
-import { extractErrorMessage } from "../common/extractErrorMessage"
-import {
-  AddYouTubeTrackMutation,
-  AddYouTubeTrackMutationVariables,
-} from "../generated/graphql"
 
 type Props = {
   roomSlug: string
+  // onTrackAdded?: () => void
 }
-
-const addYouTubeTrack = gql`
-  mutation AddYouTubeTrack($roomSlug: String!, $youtubeUrl: String!) {
-    addYouTubeTrack(roomSlug: $roomSlug, youtubeUrl: $youtubeUrl) {
-      success
-    }
-  }
-`
 
 function AddTrackForm({ roomSlug }: Props) {
   const [newTrackUrl, setNewTrackUrl] = useState("")
-
-  const [addTrack, { loading, error }] = useMutation<
-    AddYouTubeTrackMutation,
-    AddYouTubeTrackMutationVariables
-  >(addYouTubeTrack)
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
 
     try {
-      await addTrack({
-        variables: {
-          roomSlug,
-          youtubeUrl: newTrackUrl,
-        },
-      })
+      // TODO
     } catch {}
 
     setNewTrackUrl("")
@@ -44,7 +20,7 @@ function AddTrackForm({ roomSlug }: Props) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <fieldset disabled={loading}>
+      <fieldset>
         <input
           type="text"
           placeholder="Add a youtube URL..."
@@ -53,7 +29,7 @@ function AddTrackForm({ roomSlug }: Props) {
         />
         <button type="submit">add</button>
       </fieldset>
-      {error && <p>could not add track: {extractErrorMessage(error)}</p>}
+      {/* {error && <p>could not add track: {extractErrorMessage(error)}</p>} */}
     </form>
   )
 }
