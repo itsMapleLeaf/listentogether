@@ -34,6 +34,10 @@ function handleClientConnection(
     console.info(`closed: ${clientAddress}`)
     clients.delete(client.id)
   })
+
+  clientSocket.on("pong", () => {
+    client.isAlive = true
+  })
 }
 
 const handleClientMessage = (client: Client) =>
@@ -66,7 +70,7 @@ const handleClientMessage = (client: Client) =>
   })
 
 function createUpdateTracksMessage(
-  roomSlug: any,
+  roomSlug: string,
   tracks: DatabaseTrack[],
 ): SocketMessage {
   return {
@@ -81,6 +85,19 @@ function createUpdateTracksMessage(
   }
 }
 
+function checkDeadClients() {
+  for (const [id, client] of clients) {
+    if (!client.isAlive) {
+      client.terminate()
+      clients.delete(id)
+      continue
+    }
+
+    client.isAlive = false
+    client.ping()
+  }
+}
+
 export function createSocketServer(httpServer: http.Server) {
   const socketServer = new WebSocket.Server({
     server: httpServer,
@@ -88,4 +105,5 @@ export function createSocketServer(httpServer: http.Server) {
   })
 
   socketServer.on("connection", handleClientConnection)
+  setInterval(checkDeadClients, 10000)
 }
