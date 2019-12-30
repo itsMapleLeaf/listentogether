@@ -1,3 +1,4 @@
+import { SocketMessage } from "@listen-together/shared"
 import WebSocket from "ws"
 
 export class Client {
@@ -5,7 +6,7 @@ export class Client {
 
   constructor(private readonly socket: WebSocket) {}
 
-  send(message: { type: string; params?: object }) {
+  send(message: SocketMessage) {
     this.socket.send(JSON.stringify(message))
   }
 }

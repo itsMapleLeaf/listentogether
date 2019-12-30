@@ -1,5 +1,5 @@
+import { createMessageHandler } from "@listen-together/shared"
 import { observable } from "mobx"
-import { createMessageHandler } from "../socket/createMessageHandler"
 import { SocketStore } from "../socket/SocketStore"
 import { Track } from "../track/types"
 

@@ -1,3 +1,4 @@
+import { SocketMessage } from "@listen-together/shared"
 import http from "http"
 import WebSocket from "ws"
 import { photon } from "../photon"
@@ -6,7 +7,7 @@ import { Client } from "./Client"
 
 const clients = new Map<string, Client>()
 
-function broadcast(message: { type: string; params?: object }) {
+function broadcast(message: SocketMessage) {
   for (const [, client] of clients) {
     client.send(message)
   }
@@ -54,7 +55,13 @@ async function handleClientMessage(message: any, client: Client) {
 
       client.send({
         type: "serverUpdateTracks",
-        params: { tracks },
+        params: {
+          roomSlug,
+          tracks: tracks.map((track) => ({
+            ...track,
+            youtubeUrl: track.youtubeUrl || "",
+          })),
+        },
       })
     },
 
@@ -67,7 +74,13 @@ async function handleClientMessage(message: any, client: Client) {
 
       broadcast({
         type: "serverUpdateTracks",
-        params: { tracks },
+        params: {
+          roomSlug,
+          tracks: tracks.map((track) => ({
+            ...track,
+            youtubeUrl: track.youtubeUrl || "",
+          })),
+        },
       })
     },
   }

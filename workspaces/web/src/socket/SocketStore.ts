@@ -1,3 +1,4 @@
+import { SocketMessage } from "@listen-together/shared"
 import { observable } from "mobx"
 
 type ConnectionState = "connecting" | "online" | "reconnecting"
@@ -42,9 +43,7 @@ export class SocketStore {
     }
   }
 
-  listen = (
-    handleMessage: (message: { type: string; params?: any }) => void,
-  ) => {
+  listen = (handleMessage: (message: SocketMessage) => void) => {
     const listener = ({ data }: MessageEvent) =>
       handleMessage(JSON.parse(String(data)))
 
@@ -52,7 +51,7 @@ export class SocketStore {
     return () => this.socket?.removeEventListener("message", listener)
   }
 
-  send = (message: { type: string; params?: any }) => {
+  send = (message: SocketMessage) => {
     this.socket?.send(JSON.stringify(message))
   }
 }

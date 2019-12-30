@@ -1,7 +1,7 @@
+import { createMessageHandler } from "@listen-together/shared"
 import { createBrowserHistory } from "history"
 import { autorun, observable } from "mobx"
 import { createRouter } from "../common/createRouter"
-import { createMessageHandler } from "../socket/createMessageHandler"
 import { SocketStore } from "../socket/SocketStore"
 
 type AppView = { type: "lobby" } | { type: "room"; slug: string }
