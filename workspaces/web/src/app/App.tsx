@@ -1,43 +1,13 @@
-import React, { useState } from "react"
-import { Route, Switch, useHistory } from "react-router-dom"
+import { observer } from "mobx-react-lite"
+import React from "react"
 import RoomPage from "../room/RoomPage"
+import { useAppStore } from "./appStoreContext"
 import LobbyPage from "./LobbyPage"
-import { routes } from "./routes"
-import { useSocket } from "./useSocket"
-
-type HandlerMap = {
-  [_ in string]?: (params: any) => void | Promise<void>
-}
-
-function createMessageHandler(handlers: HandlerMap) {
-  return async function handleMessage(message: any) {
-    await handlers[message.type]?.(message.params)
-  }
-}
-
-type AppState = { type: "idle" } | { type: "creatingRoom" }
 
 function App() {
-  const history = useHistory()
-  const [appState, setAppState] = useState<AppState>({ type: "idle" })
+  const store = useAppStore()
 
-  const [socketState, sendCommand] = useSocket(
-    createMessageHandler({
-      async serverRoomCreated({ roomSlug }) {
-        history.push(routes.room(roomSlug))
-        setAppState({ type: "idle" })
-      },
-    }),
-  )
-
-  const handleCreateRoom = () => {
-    if (appState.type === "idle") {
-      sendCommand({ type: "clientCreateRoom" })
-      setAppState({ type: "creatingRoom" })
-    }
-  }
-
-  switch (socketState.type) {
+  switch (store.connectionState) {
     case "connecting":
       return <p>connecting...</p>
 
@@ -45,21 +15,14 @@ function App() {
       return <p>lost connection, reconnecting...</p>
 
     case "online":
-      return (
-        <Switch>
-          <Route exact path={routes.lobby}>
-            <LobbyPage
-              onCreateRoom={handleCreateRoom}
-              disabled={appState.type === "creatingRoom"}
-            />
-          </Route>
-          <Route
-            path={routes.room(":slug")}
-            render={({ match }) => <RoomPage slug={match.params.slug} />}
-          />
-        </Switch>
-      )
+      switch (store.view.type) {
+        case "lobby":
+          return <LobbyPage onCreateRoom={store.createRoom} disabled={false} />
+
+        case "room":
+          return <RoomPage slug={store.view.slug} />
+      }
   }
 }
 
-export default App
+export default observer(App)

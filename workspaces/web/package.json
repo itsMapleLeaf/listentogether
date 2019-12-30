@@ -8,19 +8,21 @@
     "test": "react-scripts test"
   },
   "dependencies": {
+    "history": "^4.10.1",
+    "mobx": "^5.15.1",
+    "mobx-react-lite": "^1.5.2",
     "react": "^16.12.0",
-    "react-dom": "^16.12.0",
-    "react-router-dom": "^5.1.2"
+    "react-dom": "^16.12.0"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.4.0",
     "@testing-library/user-event": "^8.0.2",
+    "@types/history": "^4.7.3",
     "@types/jest": "^24.0.25",
     "@types/node": "^13.1.1",
     "@types/react": "^16.9.17",
     "@types/react-dom": "^16.9.4",
-    "@types/react-router-dom": "^5.1.3",
     "@types/testing-library__react": "^9.1.2",
     "npm-run-all": "^4.1.5",
     "react-scripts": "3.3.0",

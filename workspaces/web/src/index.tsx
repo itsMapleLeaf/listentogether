@@ -1,11 +1,15 @@
 import React from "react"
 import ReactDOM from "react-dom"
-import { BrowserRouter } from "react-router-dom"
 import App from "./app/App"
+import { AppStore } from "./app/AppStore"
+import { AppStoreProvider } from "./app/appStoreContext"
+
+const store = new AppStore()
+store.connect()
 
 ReactDOM.render(
-  <BrowserRouter>
+  <AppStoreProvider store={store}>
     <App />
-  </BrowserRouter>,
+  </AppStoreProvider>,
   document.getElementById("root"),
 )
