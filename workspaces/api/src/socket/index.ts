@@ -11,12 +11,6 @@ import { Client } from "./Client"
 
 const clients = new Map<string, Client>()
 
-function broadcast(message: SocketMessage) {
-  for (const [, client] of clients) {
-    client.send(message)
-  }
-}
-
 function broadcastToRoom(slug: string, message: SocketMessage) {
   for (const [, client] of clients) {
     if (client.roomSlug === slug) client.send(message)
