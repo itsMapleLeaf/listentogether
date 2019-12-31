@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.transition {
+  transition-duration: 0.18s;
+}
+
+.transition\:bg {
+  @apply transition;
+  transition-property: background-color;
+}
+
+*:focus {
+  outline: none !important;
+  @apply shadow-outline;
+}
