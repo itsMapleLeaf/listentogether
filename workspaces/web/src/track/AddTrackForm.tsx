@@ -19,7 +19,7 @@ function AddTrackForm(props: Props) {
     <form onSubmit={handleSubmit} className="flex flex-row">
       <TextInput
         type="text"
-        placeholder="Add a youtube URL..."
+        placeholder="Add a YouTube URL..."
         value={newTrackUrl}
         onChange={(e) => setNewTrackUrl(e.target.value)}
       />
