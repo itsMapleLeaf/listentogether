@@ -9,4 +9,15 @@ WebFont.load({
   google: { families: ["Rubik"] },
 })
 
-ReactDOM.render(<App />, document.getElementById("root"))
+function renderApp() {
+  ReactDOM.render(<App />, document.getElementById("root"))
+}
+
+renderApp()
+
+declare const module: {
+  hot?: { accept(deps: string, callback: () => void): void }
+}
+if (module.hot) {
+  module.hot.accept("./app/App", renderApp)
+}
