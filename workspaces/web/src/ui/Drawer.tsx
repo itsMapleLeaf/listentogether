@@ -6,9 +6,9 @@ type Props = TagProps<"div"> & {
   visible: boolean
 }
 
-function Drawer({ side, ...props }: Props) {
+function Drawer({ side, visible, ...props }: Props) {
   const style: CSSProperties = {
-    transform: props.visible
+    transform: visible
       ? `translateX(0)`
       : `translateX(${side === "left" ? "-100%" : "100%"})`,
   }
