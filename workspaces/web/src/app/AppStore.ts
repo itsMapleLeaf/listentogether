@@ -1,18 +1,16 @@
 import { createMessageHandler } from "@listen-together/shared"
-import { createBrowserHistory } from "history"
+import { History } from "history"
 import { autorun, observable } from "mobx"
 import { createRouter } from "../common/createRouter"
 import { SocketStore } from "../socket/SocketStore"
 
 type AppView = { type: "lobby" } | { type: "room"; slug: string }
 
-const history = createBrowserHistory()
-
 export class AppStore {
   @observable
   view: AppView = { type: "lobby" }
 
-  constructor(private socket: SocketStore) {}
+  constructor(private socket: SocketStore, private history: History) {}
 
   addSocketListener = () => this.socket.listen(this.handleMessage)
 
@@ -23,16 +21,16 @@ export class AppStore {
       "/": () => ({ type: "lobby" }),
     })
 
-    this.view = router.run(history.location.pathname) ?? { type: "lobby" }
+    this.view = router.run(this.history.location.pathname) ?? { type: "lobby" }
 
-    const unlistenHistory = history.listen((location) => {
+    const unlistenHistory = this.history.listen((location) => {
       this.view = router.run(location.pathname) ?? { type: "lobby" }
     })
 
     const cleanupAutorun = autorun(() => {
       const path = this.view.type === "lobby" ? "/" : `/room/${this.view.slug}`
-      if (path !== history.location.pathname) {
-        history.push(path)
+      if (path !== this.history.location.pathname) {
+        this.history.push(path)
       }
     })
 

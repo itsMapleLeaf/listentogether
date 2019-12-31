@@ -1,3 +1,4 @@
+import { createBrowserHistory } from "history"
 import { observer } from "mobx-react-lite"
 import React, { useEffect, useMemo } from "react"
 import RoomPage from "../room/RoomPage"
@@ -6,8 +7,14 @@ import { AppStore } from "./AppStore"
 import LobbyPage from "./LobbyPage"
 
 function App() {
+  const history = useMemo(() => createBrowserHistory(), [])
+
   const socketStore = useMemo(() => new SocketStore(), [])
-  const appStore = useMemo(() => new AppStore(socketStore), [socketStore])
+
+  const appStore = useMemo(() => new AppStore(socketStore, history), [
+    socketStore,
+    history,
+  ])
 
   useEffect(() => socketStore.openConnection(), [socketStore])
   useEffect(() => appStore.addSocketListener(), [appStore])
