@@ -4,14 +4,19 @@
 
 .transition {
   transition-duration: 0.18s;
+  transition-property: all;
 }
 
-.transition\:bg {
-  @apply transition;
-  transition-property: background-color;
+.active-press:active {
+  transition-duration: none;
+  box-shadow: none;
+  transform: translateY(3px);
 }
 
-*:focus {
+.js-focus-visible :focus:not(.focus-visible) {
   outline: none !important;
-  @apply shadow-outline;
+}
+
+.js-focus-visible :focus:not([data-focus-visible-added]) {
+  outline: none !important;
 }

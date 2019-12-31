@@ -12,7 +12,7 @@ function LobbyPage(props: Props) {
         hi! create a new room to listen to music together!
       </p>
       <button
-        className="bg-blue-700 hover:bg-blue-600 transition:bg px-4 py-2 rounded-lg uppercase font-medium shadow-md"
+        className="bg-blue-700 hover:bg-blue-600 transition px-4 py-2 rounded-lg uppercase font-medium shadow-md active-press"
         onClick={props.onCreateRoom}
         disabled={props.disabled}
       >
