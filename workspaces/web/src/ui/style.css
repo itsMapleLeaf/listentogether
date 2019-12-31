@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 .transition {
   transition-duration: 0.18s;
   transition-property: all;
@@ -11,6 +17,11 @@
   transition-duration: none;
   box-shadow: none;
   transform: translateY(3px);
+}
+
+.frost-dark {
+  background-color: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(16px);
 }
 
 .js-focus-visible :focus:not(.focus-visible) {

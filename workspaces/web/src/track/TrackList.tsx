@@ -5,14 +5,13 @@ type Props = { tracks: Track[] }
 
 function TrackList(props: Props) {
   return (
-    <>
-      <h2>track list</h2>
-      <ul>
-        {props.tracks.map((track) => (
-          <li key={track.id}>{track.youtubeUrl}</li>
-        ))}
-      </ul>
-    </>
+    <ul>
+      {props.tracks.map((track) => (
+        <li className="m-4" key={track.id}>
+          {track.youtubeUrl}
+        </li>
+      ))}
+    </ul>
   )
 }
 
