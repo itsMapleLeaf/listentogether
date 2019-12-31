@@ -12,7 +12,11 @@ function LobbyPage(props: Props) {
       <p className="text-3xl mb-6">
         hi! create a new room to listen to music together!
       </p>
-      <SolidButton onClick={props.onCreateRoom} disabled={props.loading}>
+      <SolidButton
+        className="shadow-offset rounded-lg"
+        onClick={props.onCreateRoom}
+        disabled={props.loading}
+      >
         create room
       </SolidButton>
     </main>
