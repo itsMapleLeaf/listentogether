@@ -17,6 +17,11 @@
   transition-property: all;
 }
 
+.transition-slow {
+  transition-duration: 0.25s;
+  transition-property: all;
+}
+
 .active-press:active {
   transition-duration: none;
   box-shadow: none;

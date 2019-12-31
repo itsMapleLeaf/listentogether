@@ -1,9 +1,12 @@
 import { observer } from "mobx-react-lite"
-import React, { useEffect, useMemo } from "react"
+import React, { useEffect, useMemo, useState } from "react"
 import { TagProps } from "../react/types"
 import { SocketStore } from "../socket/SocketStore"
 import AddTrackForm from "../track/AddTrackForm"
 import TrackList from "../track/TrackList"
+import Drawer from "../ui/Drawer"
+import FlatButton from "../ui/FlatButton"
+import Icon, { icons } from "../ui/Icon"
 import { RoomStore } from "./RoomStore"
 import testbg from "./testbg.webp"
 
@@ -13,6 +16,8 @@ type Props = {
 }
 
 function RoomPage(props: Props) {
+  const [trackListVisible, setTrackListVisible] = useState(true)
+
   const store = useMemo(() => new RoomStore(props.socketStore), [
     props.socketStore,
   ])
@@ -22,17 +27,23 @@ function RoomPage(props: Props) {
 
   return (
     <main
-      className="h-full bg-center bg-cover flex flex-col items-start"
+      className="h-full bg-center bg-cover flex flex-col items-start overflow-y-hidden"
       style={{ backgroundImage: `url(${testbg})` }}
     >
-      <FrostPanel className="flex-1 min-h-0 flex flex-col justify-between">
+      <Drawer
+        side="left"
+        visible={trackListVisible}
+        className="flex-1 min-h-0 flex flex-col justify-between frost-dark shadow-lg"
+      >
         <div className="flex-1 overflow-y-auto">
           <TrackList tracks={store.tracks} />
         </div>
         <AddTrackForm onAddTrack={store.addYoutubeTrack} />
-      </FrostPanel>
-      <FrostPanel className="h-12 self-stretch">
-        UserBottomNavContent
+      </Drawer>
+      <FrostPanel className="h-12 self-stretch flex flex-row items-stretch">
+        <FlatButton onClick={() => setTrackListVisible((v) => !v)}>
+          <Icon icon={icons.playlist} />
+        </FlatButton>
       </FrostPanel>
     </main>
   )

@@ -9,6 +9,8 @@
   },
   "dependencies": {
     "@craco/craco": "^5.6.2",
+    "@mdi/js": "^4.7.95",
+    "@mdi/react": "^1.2.1",
     "focus-visible": "^5.0.2",
     "history": "^4.10.1",
     "mobx": "^5.15.1",
