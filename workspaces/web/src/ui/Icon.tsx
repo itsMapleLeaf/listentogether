@@ -1,5 +1,5 @@
 import { ValueOf } from "@listen-together/shared"
-import { mdiPlaylistPlay } from "@mdi/js"
+import { mdiPencil, mdiPlaylistPlay } from "@mdi/js"
 import { Icon as MaterialIcon } from "@mdi/react"
 import React from "react"
 
@@ -22,4 +22,5 @@ export default Icon
 
 export const icons = {
   playlist: mdiPlaylistPlay,
+  pencil: mdiPencil,
 }

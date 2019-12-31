@@ -1,6 +1,5 @@
 import { observer } from "mobx-react-lite"
 import React, { useEffect, useMemo, useState } from "react"
-import { TagProps } from "../react/types"
 import { SocketStore } from "../socket/SocketStore"
 import AddTrackForm from "../track/AddTrackForm"
 import TrackList from "../track/TrackList"
@@ -27,30 +26,36 @@ function RoomPage(props: Props) {
 
   return (
     <main
-      className="h-full bg-center bg-cover flex flex-col items-start overflow-y-hidden"
+      className="h-full bg-center bg-cover flex flex-col items-stretch overflow-y-hidden"
       style={{ backgroundImage: `url(${testbg})` }}
     >
+      <header className={`${frostPanel} h-12 px-4 flex items-center`}>
+        <p>
+          welcome, <span className={`text-blue-400`}>username</span>!
+        </p>
+        <FlatButton>
+          <Icon icon={icons.pencil} size={0.8} />
+        </FlatButton>
+      </header>
       <Drawer
         side="left"
         visible={trackListVisible}
-        className="flex-1 min-h-0 flex flex-col justify-between frost-dark shadow-lg"
+        className={`flex-1 min-h-0 flex flex-col justify-between self-start ${frostPanel}`}
       >
         <div className="flex-1 overflow-y-auto">
           <TrackList tracks={store.tracks} />
         </div>
         <AddTrackForm onAddTrack={store.addYoutubeTrack} />
       </Drawer>
-      <FrostPanel className="h-12 self-stretch flex flex-row items-stretch">
+      <section className={`h-12 flex flex-row items-stretch ${frostPanel}`}>
         <FlatButton onClick={() => setTrackListVisible((v) => !v)}>
           <Icon icon={icons.playlist} />
         </FlatButton>
-      </FrostPanel>
+      </section>
     </main>
   )
 }
 
 export default observer(RoomPage)
 
-const FrostPanel = (props: TagProps<"section">) => (
-  <section {...props} className={`${props.className} frost-dark shadow-lg`} />
-)
+const frostPanel = `frost-dark shadow-lg`
