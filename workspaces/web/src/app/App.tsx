@@ -24,7 +24,7 @@ function App() {
       switch (appStore.view.type) {
         case "lobby":
           return (
-            <LobbyPage onCreateRoom={appStore.createRoom} disabled={false} />
+            <LobbyPage onCreateRoom={appStore.createRoom} loading={false} />
           )
 
         case "room":

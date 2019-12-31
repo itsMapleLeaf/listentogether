@@ -1,8 +1,9 @@
 import React from "react"
+import Button from "../ui/Button"
 
 type Props = {
   onCreateRoom: () => void
-  disabled: boolean
+  loading: boolean
 }
 
 function LobbyPage(props: Props) {
@@ -11,13 +12,9 @@ function LobbyPage(props: Props) {
       <p className="text-3xl mb-6">
         hi! create a new room to listen to music together!
       </p>
-      <button
-        className="bg-blue-700 hover:bg-blue-600 transition px-4 py-2 rounded-lg uppercase font-medium shadow-md active-press"
-        onClick={props.onCreateRoom}
-        disabled={props.disabled}
-      >
+      <Button onClick={props.onCreateRoom} disabled={props.loading}>
         create room
-      </button>
+      </Button>
     </main>
   )
 }
