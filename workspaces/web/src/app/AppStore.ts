@@ -24,11 +24,13 @@ export class AppStore {
     this.view = router.run(this.history.location.pathname) ?? { type: "lobby" }
 
     const unlistenHistory = this.history.listen((location) => {
+      if (location.pathname === "/auth/callback") return
       this.view = router.run(location.pathname) ?? { type: "lobby" }
     })
 
     const cleanupAutorun = autorun(() => {
       const path = this.view.type === "lobby" ? "/" : `/room/${this.view.slug}`
+      if (this.history.location.pathname === "/auth/callback") return
       if (path !== this.history.location.pathname) {
         this.history.push(path)
       }
