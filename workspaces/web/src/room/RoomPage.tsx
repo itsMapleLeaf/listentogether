@@ -29,7 +29,7 @@ function RoomPage(props: Props) {
       className="h-full bg-center bg-cover flex flex-col items-stretch overflow-y-hidden"
       style={{ backgroundImage: `url(${testbg})` }}
     >
-      <header className={`${frostPanel} h-12 px-4 flex items-center`}>
+      <header className={`${frostPanel} h-12 px-4 flex items-center z-10`}>
         <p>
           welcome, <span className={`text-blue-400`}>username</span>!
         </p>
@@ -37,16 +37,18 @@ function RoomPage(props: Props) {
           <Icon icon={icons.pencil} size={0.8} />
         </FlatButton>
       </header>
+
       <Drawer
         side="left"
         visible={trackListVisible}
-        className={`flex-1 min-h-0 flex flex-col justify-between self-start ${frostPanel}`}
+        className={`flex-1 min-h-0 flex flex-col justify-between self-start frost-dark`}
       >
         <div className="flex-1 overflow-y-auto">
           <TrackList tracks={store.tracks} />
         </div>
         <AddTrackForm onAddTrack={store.addYoutubeTrack} />
       </Drawer>
+
       <section className={`h-12 flex flex-row items-stretch ${frostPanel}`}>
         <FlatButton onClick={() => setTrackListVisible((v) => !v)}>
           <Icon icon={icons.playlist} />
@@ -58,4 +60,4 @@ function RoomPage(props: Props) {
 
 export default observer(RoomPage)
 
-const frostPanel = `frost-dark shadow-lg`
+const frostPanel = `frost-dark shadow`
