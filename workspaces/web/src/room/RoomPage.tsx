@@ -31,7 +31,9 @@ function RoomPage(props: Props) {
         </div>
         <AddTrackForm onAddTrack={store.addYoutubeTrack} />
       </FrostPanel>
-      <FrostPanel className="h-12 self-stretch">nav</FrostPanel>
+      <FrostPanel className="h-12 self-stretch">
+        UserBottomNavContent
+      </FrostPanel>
     </main>
   )
 }
