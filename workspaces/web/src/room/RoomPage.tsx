@@ -4,7 +4,6 @@ import { SocketStore } from "../socket/SocketStore"
 import AddTrackForm from "../track/AddTrackForm"
 import TrackList from "../track/TrackList"
 import Drawer from "../ui/Drawer"
-import FlatButton from "../ui/FlatButton"
 import Icon, { icons } from "../ui/Icon"
 import { RoomStore } from "./RoomStore"
 import testbg from "./testbg.webp"
@@ -33,9 +32,9 @@ function RoomPage(props: Props) {
         <p>
           welcome, <span className={`text-blue-400`}>username</span>!
         </p>
-        <FlatButton>
+        <button className="flat-button">
           <Icon icon={icons.pencil} size={0.8} />
-        </FlatButton>
+        </button>
       </header>
 
       <Drawer
@@ -50,9 +49,12 @@ function RoomPage(props: Props) {
       </Drawer>
 
       <section className={`h-12 flex flex-row items-stretch ${frostPanel}`}>
-        <FlatButton onClick={() => setTrackListVisible((v) => !v)}>
+        <button
+          className="flat-button"
+          onClick={() => setTrackListVisible((v) => !v)}
+        >
           <Icon icon={icons.playlist} />
-        </FlatButton>
+        </button>
       </section>
     </main>
   )

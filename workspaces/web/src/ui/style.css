@@ -1,6 +1,5 @@
 @tailwind base;
 @tailwind components;
-@tailwind utilities;
 
 :root {
   font: 16px Rubik, sans-serif;
@@ -22,15 +21,10 @@
   transition-property: all;
 }
 
-.active-press:active {
-  transition-duration: none;
+.press {
+  transition-duration: 0s;
   box-shadow: none;
-  transform: translateY(3px);
-}
-
-.frost-dark {
-  background-color: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(16px);
+  transform: translateY(2px);
 }
 
 .js-focus-visible :focus:not(.focus-visible) {
@@ -49,7 +43,7 @@
   border-color: rgba(255, 255, 255, 0.3);
 }
 
-.focus\:border-color-hard-white:focus {
+.border-color-hard-white {
   border-color: rgba(255, 255, 255, 0.6);
 }
 
@@ -60,3 +54,37 @@
 .shadow-offset {
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.4);
 }
+
+.solid-button {
+  @apply bg-blue-700 transition px-4 h-12 uppercase font-medium;
+}
+.solid-button:hover {
+  @apply bg-blue-600;
+}
+.solid-button:active {
+  @apply press;
+}
+
+.flat-button {
+  @apply h-12 px-3 opacity-50 transition;
+}
+.flat-button:hover {
+  @apply opacity-100;
+}
+.flat-button:active {
+  @apply press;
+}
+
+.text-input {
+  @apply h-12 px-4 transition bg-soft-white border-b-4 border-color-soft-white;
+}
+.text-input:focus {
+  @apply border-color-hard-white outline-none;
+}
+
+.frost-dark {
+  background-color: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(16px);
+}
+
+@tailwind utilities;

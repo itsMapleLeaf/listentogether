@@ -1,6 +1,4 @@
 import React, { useState } from "react"
-import SolidButton from "../ui/SolidButton"
-import TextInput from "../ui/TextInput"
 
 type Props = {
   onAddTrack: (url: string) => void
@@ -17,15 +15,20 @@ function AddTrackForm(props: Props) {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-row">
-      <TextInput
+      <input
+        className="text-input"
         type="text"
         placeholder="Add a YouTube URL..."
         value={newTrackUrl}
         onChange={(e) => setNewTrackUrl(e.target.value)}
       />
-      <SolidButton style={{ borderRadius: 0 }} type="submit">
+      <button
+        className="solid-button"
+        style={{ borderRadius: 0 }}
+        type="submit"
+      >
         add
-      </SolidButton>
+      </button>
     </form>
   )
 }

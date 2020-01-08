@@ -1,5 +1,4 @@
 import React from "react"
-import SolidButton from "../ui/SolidButton"
 
 type Props = {
   onCreateRoom: () => void
@@ -12,13 +11,13 @@ function LobbyPage(props: Props) {
       <p className="text-3xl mb-6">
         hi! create a new room to listen to music together!
       </p>
-      <SolidButton
-        className="shadow-offset rounded-lg"
+      <button
+        className="solid-button shadow-offset rounded-lg"
         onClick={props.onCreateRoom}
         disabled={props.loading}
       >
         create room
-      </SolidButton>
+      </button>
     </main>
   )
 }

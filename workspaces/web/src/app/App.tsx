@@ -4,7 +4,6 @@ import React, { useEffect, useMemo } from "react"
 import { AuthStore } from "../auth/AuthStore"
 import RoomPage from "../room/RoomPage"
 import { SocketStore } from "../socket/SocketStore"
-import SolidButton from "../ui/SolidButton"
 import { AppStore } from "./AppStore"
 import LobbyPage from "./LobbyPage"
 
@@ -33,7 +32,11 @@ function App() {
       return <p>an error occurred: {authStore.status.error}</p>
 
     case "anonymous":
-      return <SolidButton onClick={authStore.login}>log in</SolidButton>
+      return (
+        <button className="solid-button" onClick={authStore.login}>
+          log in
+        </button>
+      )
 
     case "authenticated":
       switch (socketStore.connectionState) {
