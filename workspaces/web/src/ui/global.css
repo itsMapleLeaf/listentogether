@@ -1,0 +1,19 @@
+@tailwind base;
+
+:root {
+  font: 16px Rubik, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+.js-focus-visible :focus:not(.focus-visible) {
+  outline: none !important;
+}
+
+.js-focus-visible :focus:not([data-focus-visible-added]) {
+  outline: none !important;
+}

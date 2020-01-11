@@ -4,8 +4,11 @@ import React, { useEffect, useMemo } from "react"
 import { AuthStore } from "../auth/AuthStore"
 import RoomPage from "../room/RoomPage"
 import { SocketStore } from "../socket/SocketStore"
+import { myAwesomeClassName } from "../ui/test.module.css"
 import { AppStore } from "./AppStore"
 import LobbyPage from "./LobbyPage"
+
+myAwesomeClassName
 
 function App() {
   const history = useMemo(() => createBrowserHistory(), [])

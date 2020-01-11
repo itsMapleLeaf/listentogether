@@ -1,15 +1,4 @@
-@tailwind base;
 @tailwind components;
-
-:root {
-  font: 16px Rubik, sans-serif;
-}
-
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
 
 .transition {
   transition-duration: 0.18s;
@@ -25,14 +14,6 @@
   transition-duration: 0s;
   box-shadow: none;
   transform: translateY(2px);
-}
-
-.js-focus-visible :focus:not(.focus-visible) {
-  outline: none !important;
-}
-
-.js-focus-visible :focus:not([data-focus-visible-added]) {
-  outline: none !important;
 }
 
 .bg-soft-white {

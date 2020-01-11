@@ -4,6 +4,7 @@ const PurgeCssPlugin = require("purgecss-webpack-plugin")
 module.exports = ({ env }) => {
   const config = {
     style: {
+      modules: { localsConvention: "camelCaseOnly" },
       postcss: { plugins: [require("tailwindcss")] },
     },
     webpack: { plugins: [] },
